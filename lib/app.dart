@@ -10,7 +10,7 @@ class SyncYourSnapApp extends StatelessWidget {
       title: 'Sync Your Snap',
       initialRoute: '/login',
       routes: {
-        'login': (BuildContext context) => const LoginPage(),
+        '/login': (BuildContext context) => const LoginPage(),
       },
      
       theme: ThemeData(
