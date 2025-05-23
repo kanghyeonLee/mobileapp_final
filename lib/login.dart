@@ -49,8 +49,14 @@ class _LoginPageState extends State<LoginPage> {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () async {
-                  signInWithGoogle();
-                  await Navigator.pushReplacementNamed(context, '/');
+                  try {
+                    final userCredential = await signInWithGoogle();
+                    if (userCredential.user != null) {
+                      Navigator.pushReplacementNamed(context, '/');
+                    }
+                  } catch (e) {
+                    print("Google sign-in cancelled or failed: $e");
+                  }
                 },
                 icon: const Icon(Icons.g_mobiledata, color: Colors.white),
                 label: const Text("GOOGLE"),
