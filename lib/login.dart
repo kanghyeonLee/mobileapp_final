@@ -48,8 +48,9 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () {
+                onPressed: () async {
                   signInWithGoogle();
+                  await Navigator.pushReplacementNamed(context, '/');
                 },
                 icon: const Icon(Icons.g_mobiledata, color: Colors.white),
                 label: const Text("GOOGLE"),
@@ -70,6 +71,7 @@ class _LoginPageState extends State<LoginPage> {
               child: ElevatedButton.icon(
                 onPressed: () {
                   signInAnonymous();
+                  Navigator.pushReplacementNamed(context, '/');
                 },
                 icon: const Icon(Icons.question_mark, color: Colors.black),
                 label: const Text("GUEST"),
