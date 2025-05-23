@@ -40,9 +40,8 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 80.0),
             Column(
               children: <Widget>[
-                Image.asset('assets/diamond.png'),
                 const SizedBox(height: 16.0),
-                const Text('SHRINE'),
+                const Text('Sync Your Snap'),
               ],
             ),
             const SizedBox(height: 120.0),
@@ -91,3 +90,5 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
+
+// 작업 중이 였던 것
