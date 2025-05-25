@@ -53,9 +53,17 @@ class _LoginPageState extends State<LoginPage> {
                     final userCredential = await signInWithGoogle();
                     if (userCredential.user != null) {
                       Navigator.pushReplacementNamed(context, '/');
+                    } else {
+                      // 로그인 취소됨
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('로그인이 취소되었습니다.')),
+                      );
                     }
                   } catch (e) {
-                    print("Google sign-in cancelled or failed: $e");
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('로그인 중 오류가 발생했습니다.')),
+                    );
+                    print('\n\n@@@@@@@@@@@@@@Login failed: $e\n\n');
                   }
                 },
                 icon: const Icon(Icons.g_mobiledata, color: Colors.white),
@@ -98,5 +106,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-// 작업 중이 였던 것
