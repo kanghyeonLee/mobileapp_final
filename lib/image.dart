@@ -12,7 +12,7 @@ class ImagePage extends StatefulWidget {
   _ImagePageState createState() => _ImagePageState();
 }
 
-class ImageObj{
+class ImageObj {
   final String title;
   final Image image;
   ImageObj({
@@ -28,48 +28,61 @@ class _ImagePageState extends State<ImagePage> {
       enableClassification: true,
     ),
   );
+
   List<ImageObj> images = [];
+
   Future<void> _doDectect() async {
     final picker = ImagePicker();
-    List<XFile> imagesFromPicker = await picker.pickMultiImage();
-    List<int> faceCount = [];
-    images = [];
-    for(XFile item in imagesFromPicker){
-      final faces = await _faceDetector.processImage(InputImage.fromFilePath(item.path));
-      faceCount.add(faces.length);
+    final List<XFile> imagesFromPicker = await picker.pickMultiImage();
+    final List<ImageObj> tempList = [];
+
+    for (XFile item in imagesFromPicker) {
+      final inputImage = InputImage.fromFilePath(item.path);
+      final List<Face> faces = await _faceDetector.processImage(inputImage);
+      final hasHuman = faces.isNotEmpty;
+
+      tempList.add(
+        ImageObj(
+          title: hasHuman ? "Human" : "No Human",
+          image: Image(image: XFileImage(item), width: 64, height: 64, fit: BoxFit.cover),
+        ),
+      );
     }
+
     setState(() {
-      int i=0;
-      for(XFile item in imagesFromPicker){
-        images.add(
-          ImageObj(
-            title: faceCount[i++] > 0 ? "Human":"No Human", image: Image(image: XFileImage(item))
-            )
-        );
-      }
+      images.addAll(tempList);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Face Detection Gallery"),
+      ),
       body: SafeArea(
-        child: images.length > 0 ? ListView.builder(
-            itemBuilder: (context, index){
-              return ListTile(
-                leading: images[index].image,
-                title: Text(images[index].title),
-                onTap: (){
-
+        child: images.isNotEmpty
+            ? ListView.builder(
+                itemCount: images.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: images[index].image,
+                    title: Text(images[index].title),
+                    onTap: () {
+                      // 추가 동작 가능
+                    },
+                  );
                 },
-              );
-            }) : Text("No Images"),
-          ),
-           floatingActionButton: FloatingActionButton(
-            onPressed: _doDectect,
-            tooltip: 'Increment',
-            child: const Icon(Icons.add),
-          ), 
+              )
+            : const Center(
+                child: Text("No Images Selected"),
+              ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _doDectect,
+        tooltip: 'Select Images',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
