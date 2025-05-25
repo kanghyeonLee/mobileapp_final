@@ -1,3 +1,4 @@
+import 'package:cross_file_image/cross_file_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
@@ -64,6 +65,11 @@ class _ImagePageState extends State<ImagePage> {
               );
             }) : Text("No Images"),
           ),
+           floatingActionButton: FloatingActionButton(
+            onPressed: _doDectect,
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+          ), 
     );
   }
 }
