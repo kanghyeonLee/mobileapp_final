@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
             Column(
               children: <Widget>[
                 const SizedBox(height: 16.0),
-                const Text('SHRINE'),
+                const Text('Sync Your Snap'),
               ],
             ),
             const SizedBox(height: 120.0),
@@ -49,7 +49,22 @@ class _LoginPageState extends State<LoginPage> {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () async {
-                  signInWithGoogle();
+                  try {
+                    final userCredential = await signInWithGoogle();
+                    if (userCredential.user != null) {
+                      Navigator.pushReplacementNamed(context, '/');
+                    } else {
+                      // 로그인 취소됨
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('로그인이 취소되었습니다.')),
+                      );
+                    }
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('로그인 중 오류가 발생했습니다.')),
+                    );
+                    print('\n\n@@@@@@@@@@@@@@Login failed: $e\n\n');
+                  }
                 },
                 icon: const Icon(Icons.g_mobiledata, color: Colors.white),
                 label: const Text("GOOGLE"),
