@@ -46,8 +46,15 @@ class HomePage extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: 
-          Text('You did it!')
+        child: Column(
+          children: <Widget>[
+              TextButton(onPressed: (){
+                Navigator.pushReplacementNamed(context, '/image');
+              }, 
+              child: Text('Go to image.dart'),
+            )
+          ],
+        )
         ),
     );
   }

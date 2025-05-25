@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp_final/home.dart';
+import 'package:mobileapp_final/image.dart';
 import 'login.dart';
 
 class SyncYourSnapApp extends StatelessWidget {
@@ -12,7 +13,8 @@ class SyncYourSnapApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (BuildContext context) => const LoginPage(),
-        '/':(BuildContext context) => const HomePage()
+        '/':(BuildContext context) => const HomePage(),
+        '/image':(BuildContext context) => const ImagePage(),
       },
      
       theme: ThemeData(
