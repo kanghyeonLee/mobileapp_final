@@ -40,7 +40,6 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 80.0),
             Column(
               children: <Widget>[
-                Image.asset('assets/diamond.png'),
                 const SizedBox(height: 16.0),
                 const Text('SHRINE'),
               ],
@@ -51,7 +50,6 @@ class _LoginPageState extends State<LoginPage> {
               child: ElevatedButton.icon(
                 onPressed: () async {
                   signInWithGoogle();
-                  await Navigator.pushReplacementNamed(context, '/');
                 },
                 icon: const Icon(Icons.g_mobiledata, color: Colors.white),
                 label: const Text("GOOGLE"),

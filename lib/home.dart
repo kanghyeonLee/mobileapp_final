@@ -32,10 +32,17 @@ class HomePage extends StatelessWidget {
           },
         ),
         title: const Text(
-            'Main'
+            'Sync Your Snap'
           ),
         actions: <Widget>[
-        
+          IconButton(
+              onPressed: (){
+                
+              }, 
+              icon: const Icon(
+                Icons.person
+              )
+            )
         ],
       ),
       body: Center(child: Text('You did it!')),
