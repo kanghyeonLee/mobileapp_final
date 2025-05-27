@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp_final/home.dart';
 import 'package:mobileapp_final/image.dart';
+import 'package:mobileapp_final/result.dart';
 import 'login.dart';
 
 class SyncYourSnapApp extends StatelessWidget {
