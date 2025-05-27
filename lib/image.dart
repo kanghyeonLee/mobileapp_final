@@ -18,9 +18,10 @@ class _ImagePageState extends State<ImagePage> {
     options: FaceDetectorOptions(
       enableContours: true,
       enableClassification: true,
+      enableLandmarks: true,
     ),
   );
-
+  
   ImageObj? image1,image2;
 
   Future<ImageObj?> _detectImage() async {
@@ -37,7 +38,12 @@ class _ImagePageState extends State<ImagePage> {
       final rightEyeOpenProbability = hasHuman ? (faces.first.rightEyeOpenProbability ?? 0.0) : 0.0;
       final headEulerAngleY = hasHuman ? (faces.first.headEulerAngleY ?? 0.0) : 0.0;
       final headEulerAngleZ = hasHuman ? (faces.first.headEulerAngleZ ?? 0.0) : 0.0; 
-
+      final nose = hasHuman ? faces.first.landmarks[FaceLandmarkType.noseBase] : null;
+      final leftEar = hasHuman ? faces.first.landmarks[FaceLandmarkType.leftEar] : null;
+      final rightEar = hasHuman ? faces.first.landmarks[FaceLandmarkType.rightEar] : null;
+      final mouthLeft = hasHuman ? faces.first.landmarks[FaceLandmarkType.leftMouth] : null;
+      final mouthRight = hasHuman ? faces.first.landmarks[FaceLandmarkType.rightMouth] : null;
+      final mouthBottom = hasHuman ? faces.first.landmarks[FaceLandmarkType.bottomMouth] : null;
       return ImageObj(
         title: hasHuman ? "Human" : "No Human",
         image: Container(
@@ -52,6 +58,12 @@ class _ImagePageState extends State<ImagePage> {
         rightEyeOpenProb: rightEyeOpenProbability,
         headTurnY: headEulerAngleY, 
         headTiltZ: headEulerAngleZ,
+        nose: nose!,
+        leftEar: leftEar!,
+        rightEar: rightEar!,
+        mouthLeft: mouthLeft!,
+        mouthRight: mouthRight!,
+        mouthBottom: mouthBottom!,
       );
     }
     return null;
