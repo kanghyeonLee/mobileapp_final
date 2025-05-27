@@ -18,6 +18,20 @@ class ImageObj {
   final FaceLandmark mouthLeft;
   final FaceLandmark mouthRight;
   final FaceLandmark mouthBottom;
+  final FaceContour face;
+  final FaceContour leftEyebrowTop;
+  final FaceContour leftEyebrowBottom;
+  final FaceContour rightEyebrowTop;
+  final FaceContour rightEyebrowBottom;
+  final FaceContour leftEye;
+  final FaceContour rightEye;
+  final FaceContour upperLipTop;
+  final FaceContour upperLipBottom;
+  final FaceContour lowerLipTop;
+  final FaceContour lowerLipBottom;
+  final FaceContour noseBridge;
+  final FaceContour noseBottom;
+
   ImageObj({
     required this.title,
     required this.image,
@@ -31,6 +45,20 @@ class ImageObj {
     required this.rightEar,
     required this.mouthLeft,
     required this.mouthRight,
-    required this.mouthBottom
+    required this.mouthBottom,
+
+    required this.face,
+    required this.leftEyebrowTop,
+    required this.leftEyebrowBottom,
+    required this.rightEyebrowTop,
+    required this.rightEyebrowBottom,
+    required this.leftEye,
+    required this.rightEye,
+    required this.upperLipTop,
+    required this.upperLipBottom,
+    required this.lowerLipTop,
+    required this.lowerLipBottom,
+    required this.noseBridge,
+    required this.noseBottom,
   });
 }
