@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
 ImageObj? selectedImage1;
 ImageObj? selectedImage2;
@@ -11,6 +12,12 @@ class ImageObj {
   final double rightEyeOpenProb;
   final double headTurnY;
   final double headTiltZ;
+  final FaceLandmark nose;
+  final FaceLandmark leftEar;
+  final FaceLandmark rightEar;
+  final FaceLandmark mouthLeft;
+  final FaceLandmark mouthRight;
+  final FaceLandmark mouthBottom;
   ImageObj({
     required this.title,
     required this.image,
@@ -19,5 +26,11 @@ class ImageObj {
     required this.rightEyeOpenProb,
     required this.headTurnY,
     required this.headTiltZ,
+    required this.nose,
+    required this.leftEar,
+    required this.rightEar,
+    required this.mouthLeft,
+    required this.mouthRight,
+    required this.mouthBottom
   });
 }
