@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cross_file_image/cross_file_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -143,6 +145,7 @@ class _ImagePageState extends State<ImagePage> {
                     });
                   }
                 }
+                
               },
               child: Container(
                 width: double.infinity,
