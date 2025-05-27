@@ -21,12 +21,12 @@ class SyncYourSnapApp extends StatelessWidget {
         '/home': (BuildContext context) => const HomePage(),
         '/profile': (BuildContext context) => const ProfilePage(),
       },
-     
+
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
           centerTitle: true,
           foregroundColor: Colors.white,
-          backgroundColor: Colors.grey,
+          backgroundColor: Color.fromARGB(255, 12, 63, 151),
         ),
       ),
     );
