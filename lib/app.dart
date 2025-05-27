@@ -16,6 +16,7 @@ class SyncYourSnapApp extends StatelessWidget {
         '/login': (BuildContext context) => const LoginPage(),
         '/': (BuildContext context) => const HomePage(),
         '/image': (BuildContext context) => const ImagePage(),
+        '/result': (BuildContext context) => const ResultPage(),
       },
 
       theme: ThemeData(
