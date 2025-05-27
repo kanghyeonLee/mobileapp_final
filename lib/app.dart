@@ -13,15 +13,16 @@ class SyncYourSnapApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login': (BuildContext context) => const LoginPage(),
-        '/':(BuildContext context) => const HomePage(),
-        '/image':(BuildContext context) => const ImagePage(),
+        '/': (BuildContext context) => const HomePage(),
+        '/image': (BuildContext context) => const ImagePage(),
       },
-     
+
       theme: ThemeData(
+        scaffoldBackgroundColor: Colors.grey[50],
         appBarTheme: const AppBarTheme(
           centerTitle: true,
           foregroundColor: Colors.white,
-          backgroundColor: Colors.grey,
+          backgroundColor: Color.fromARGB(255, 12, 63, 151),
         ),
       ),
     );

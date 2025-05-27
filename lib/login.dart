@@ -33,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: Colors.white, // 원하는 색
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -41,7 +42,22 @@ class _LoginPageState extends State<LoginPage> {
             Column(
               children: <Widget>[
                 const SizedBox(height: 16.0),
-                const Text('Sync Your Snap'),
+                Text(
+                  'Sync Your Snap',
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 12, 63, 151),
+                    letterSpacing: 1.5,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 4.0,
+                        color: Colors.black26,
+                        offset: Offset(2, 2),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 120.0),
@@ -54,7 +70,6 @@ class _LoginPageState extends State<LoginPage> {
                     if (userCredential.user != null) {
                       Navigator.pushReplacementNamed(context, '/');
                     } else {
-                      // 로그인 취소됨
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('로그인이 취소되었습니다.')),
                       );
