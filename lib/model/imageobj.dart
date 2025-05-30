@@ -5,6 +5,7 @@ ImageObj? selectedImage1;
 ImageObj? selectedImage2;
 
 class ImageObj {
+  final Face face;
   final String title;
   final Widget image;
   final double smiling;
@@ -18,7 +19,7 @@ class ImageObj {
   final FaceLandmark mouthLeft;
   final FaceLandmark mouthRight;
   final FaceLandmark mouthBottom;
-  final FaceContour face;
+  final FaceContour faceContour;
   final FaceContour leftEyebrowTop;
   final FaceContour leftEyebrowBottom;
   final FaceContour rightEyebrowTop;
@@ -46,7 +47,7 @@ class ImageObj {
     required this.mouthLeft,
     required this.mouthRight,
     required this.mouthBottom,
-
+    required this.faceContour,
     required this.face,
     required this.leftEyebrowTop,
     required this.leftEyebrowBottom,

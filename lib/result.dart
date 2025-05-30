@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'model/imageobj.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -7,33 +10,70 @@ class ResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    double getMouthGap(List<Point<int>> upper, List<Point<int>> lower, ImageObj image){
+      if (upper.isEmpty || lower.isEmpty) return 0.0;
+      final centerUpper = upper[upper.length ~/ 2];
+      final centerLower = lower[lower.length ~/ 2];
+      final mouthGap = (centerUpper.y - centerLower.y).abs();
+      final faceHeight = image.face.boundingBox.height;
+      return mouthGap / faceHeight;
+    }
+
+    double getEyebrowGap(List<Point<int>> leftEyebrow, List<Point<int>> rightEyebrow,ImageObj image) {
+      if (leftEyebrow.isEmpty || rightEyebrow.isEmpty) return 0.0;
+
+      final centerLeft = leftEyebrow[leftEyebrow.length ~/ 2];
+      final centerRight = rightEyebrow[rightEyebrow.length ~/ 2];
+
+      final browGap = (centerLeft.y - centerRight.y).abs();
+      final faceHeight = image.face.boundingBox.height;
+
+      return browGap / faceHeight;
+    }
+    final shadowColor = const Color(0xFFCCCCCC);
+    
+    int touchedGroupIndex = -1;
+    int rotationTurns = 1;
     final args = ModalRoute.of(context)!.settings.arguments as Map;
     final ImageObj image1 = args['image1'];
     final ImageObj image2 = args['image2'];
-    final diff = (image1.smiling - image2.smiling).abs();
-    final similar = diff < 0.2;
+    final diffsmiling = (image1.smiling - image2.smiling).abs();
+    final upperLipBottom1 = image1.upperLipBottom.points;
+    final lowerLipTop1 = image1.lowerLipTop.points;
+    final upperLipBottom2 = image2.upperLipBottom.points;
+    final lowerLipTop2 = image2.lowerLipTop.points;
+    final mouthGap1 = getMouthGap(upperLipBottom1, lowerLipTop1, image1);
+    final mouthGap2 = getMouthGap(upperLipBottom2, lowerLipTop2, image2);
+    final leftEyebrow1 = image1.leftEyebrowTop.points;
+    final rightEyebrow1 = image1.rightEyebrowTop.points;
+    final leftEyebrow2 = image2.leftEyebrowTop.points;
+    final rightEyebrow2 = image2.rightEyebrowTop.points;
+
+    final eyebrowGap1 = getEyebrowGap(leftEyebrow1, rightEyebrow1, image1);
+    final eyebrowGap2 = getEyebrowGap(leftEyebrow2, rightEyebrow2, image2);
     final List<String> labels = [
       'Smile',
-      'Left Eye',
-      'Right Eye',
-      'Head Turn',
-      'Head Tilt',
+      'Left Eye Open',
+      'Right Eye Open',
+      'Mouth Gap',
+      'Eyebrow Gap',
     ];
 
     final List<double> values1 = [
       image1.smiling,
       image1.leftEyeOpenProb,
       image1.rightEyeOpenProb,
-      (image1.headTurnY + 30) / 60,
-      (image1.headTiltZ + 30) / 60,
+      mouthGap1,
+      eyebrowGap1
     ];
 
     final List<double> values2 = [
       image2.smiling,
       image2.leftEyeOpenProb,
       image2.rightEyeOpenProb,
-      (image2.headTurnY + 30) / 60,
-      (image2.headTiltZ + 30) / 60,
+      mouthGap2,
+      eyebrowGap2
     ];
 
     return Scaffold(
@@ -41,65 +81,159 @@ class ResultPage extends StatelessWidget {
       body: Stack(
         children: [
           ListView(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 100), // 하단 공간 확보
-            children: [
-              SizedBox(
-                height: 200,
-                child: BarChart(
-                  BarChartData(
-                    barGroups: List.generate(labels.length, (index) {
-                      return BarChartGroupData(
-                        x: index,
-                        barRods: [
-                          BarChartRodData(
-                            toY: values1[index],
-                            color: Colors.blue,
-                            width: 8,
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+            children: List.generate(labels.length, (index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    labels[index],
+                    style: const TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(height: 10,),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 왼쪽 라벨
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          
+                          Row(
+                            children: [
+                              Text(
+                                "Image 1",
+                                style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(width: 4),
+                             
+                            ],
                           ),
-                          BarChartRodData(
-                            toY: values2[index],
-                            color: Colors.red,
-                            width: 8,
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Text(
+                                "Image 2",
+                                style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(width: 4),
+                              
+                            ],
                           ),
                         ],
-                      );
-                    }),
-                    titlesData: FlTitlesData(
-                      bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: true,
-                          getTitlesWidget: (value, meta) {
-                            return Transform.rotate(
-                              angle: -0.2,
-                              child: Text(
-                                labels[value.toInt()],
-                                style: const TextStyle(fontSize: 10),
-                              ),
-                            );
-                          },
-                          reservedSize: 30,
+                      ),
+                  
+                      // 중앙: 애니메이션 바
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // image1 bar
+                            TweenAnimationBuilder<double>(
+                              tween: Tween(begin: 0, end: values1[index].clamp(0.0, 1.0)),
+                              duration: const Duration(milliseconds: 800),
+                              builder: (context, value, _) {
+                                final color = Color.lerp(Colors.red, Colors.green, value);
+                                return Stack(
+                                  children: [
+                                    Container(
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[300],
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    FractionallySizedBox(
+                                      widthFactor: value,
+                                      child: Container(
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          color: color,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 4),
+                            // image2 bar
+                            TweenAnimationBuilder<double>(
+                              tween: Tween(begin: 0, end: values2[index].clamp(0.0, 1.0)),
+                              duration: const Duration(milliseconds: 800),
+                              builder: (context, value, _) {
+                                final color = Color.lerp(Colors.red, Colors.green, value);
+                                return Stack(
+                                  children: [
+                                    Container(
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[300],
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    FractionallySizedBox(
+                                      widthFactor: value,
+                                      child: Container(
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          color: color,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    maxY: 1.0,
+                  
+                      const SizedBox(width: 12),
+                  
+                      // 오른쪽 퍼센트 + 아이콘
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "${(values1[index] * 100).toStringAsFixed(0)}%",
+                                style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(width: 4),
+                             
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Text(
+                                "${(values2[index] * 100).toStringAsFixed(0)}%",
+                                style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(width: 4),
+                              
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
+                ],
               ),
-              const SizedBox(height: 20),
-              Text(
-                similar
-                    ? "Expressions look similar"
-                    : "Expressions seem different",
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+            );
+          }),
           ),
 
-          // 고정 버튼
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
