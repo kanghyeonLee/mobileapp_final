@@ -1,10 +1,13 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cross_file_image/cross_file_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:intl/intl.dart'; // 날짜 포맷을 위해
+import 'package:mobileapp_final/fire_service.dart';
 import 'model/imageobj.dart';
 
 class ImagePage extends StatefulWidget {
@@ -15,6 +18,8 @@ class ImagePage extends StatefulWidget {
 }
 
 class _ImagePageState extends State<ImagePage> {
+  XFile? file1;
+  XFile? file2;
   final _faceDetector = FaceDetector(
     options: FaceDetectorOptions(
       enableContours: true,
@@ -39,11 +44,16 @@ class _ImagePageState extends State<ImagePage> {
 
       // 랜드마크 추출
       final nose = hasHuman ? face.landmarks[FaceLandmarkType.noseBase] : null;
-      final leftEar = hasHuman ? face.landmarks[FaceLandmarkType.leftEar] : null;
-      final rightEar = hasHuman ? face.landmarks[FaceLandmarkType.rightEar] : null;
-      final mouthLeft = hasHuman ? face.landmarks[FaceLandmarkType.leftMouth] : null;
-      final mouthRight = hasHuman ? face.landmarks[FaceLandmarkType.rightMouth] : null;
-      final mouthBottom = hasHuman ? face.landmarks[FaceLandmarkType.bottomMouth] : null;
+      final leftEar =
+          hasHuman ? face.landmarks[FaceLandmarkType.leftEar] : null;
+      final rightEar =
+          hasHuman ? face.landmarks[FaceLandmarkType.rightEar] : null;
+      final mouthLeft =
+          hasHuman ? face.landmarks[FaceLandmarkType.leftMouth] : null;
+      final mouthRight =
+          hasHuman ? face.landmarks[FaceLandmarkType.rightMouth] : null;
+      final mouthBottom =
+          hasHuman ? face.landmarks[FaceLandmarkType.bottomMouth] : null;
 
       // 컨투어 추출
       FaceContour getContour(FaceContourType type) =>
@@ -65,8 +75,10 @@ class _ImagePageState extends State<ImagePage> {
 
       // 표정 및 방향
       final smiling = hasHuman ? (face.smilingProbability ?? 0.0) : 0.0;
-      final leftEyeOpenProbability = hasHuman ? (face.leftEyeOpenProbability ?? 0.0) : 0.0;
-      final rightEyeOpenProbability = hasHuman ? (face.rightEyeOpenProbability ?? 0.0) : 0.0;
+      final leftEyeOpenProbability =
+          hasHuman ? (face.leftEyeOpenProbability ?? 0.0) : 0.0;
+      final rightEyeOpenProbability =
+          hasHuman ? (face.rightEyeOpenProbability ?? 0.0) : 0.0;
       final headEulerAngleY = hasHuman ? (face.headEulerAngleY ?? 0.0) : 0.0;
       final headEulerAngleZ = hasHuman ? (face.headEulerAngleZ ?? 0.0) : 0.0;
 
@@ -82,12 +94,42 @@ class _ImagePageState extends State<ImagePage> {
         rightEyeOpenProb: rightEyeOpenProbability,
         headTurnY: headEulerAngleY,
         headTiltZ: headEulerAngleZ,
-        nose: nose ?? FaceLandmark(type: FaceLandmarkType.noseBase, position: const Point(0, 0)),
-        leftEar: leftEar ?? FaceLandmark(type: FaceLandmarkType.leftEar, position: const Point(0, 0)),
-        rightEar: rightEar ?? FaceLandmark(type: FaceLandmarkType.rightEar, position: const Point(0, 0)),
-        mouthLeft: mouthLeft ?? FaceLandmark(type: FaceLandmarkType.leftMouth, position: const Point(0, 0)),
-        mouthRight: mouthRight ?? FaceLandmark(type: FaceLandmarkType.rightMouth, position: const Point(0, 0)),
-        mouthBottom: mouthBottom ?? FaceLandmark(type: FaceLandmarkType.bottomMouth, position: const Point(0, 0)),
+        nose:
+            nose ??
+            FaceLandmark(
+              type: FaceLandmarkType.noseBase,
+              position: const Point(0, 0),
+            ),
+        leftEar:
+            leftEar ??
+            FaceLandmark(
+              type: FaceLandmarkType.leftEar,
+              position: const Point(0, 0),
+            ),
+        rightEar:
+            rightEar ??
+            FaceLandmark(
+              type: FaceLandmarkType.rightEar,
+              position: const Point(0, 0),
+            ),
+        mouthLeft:
+            mouthLeft ??
+            FaceLandmark(
+              type: FaceLandmarkType.leftMouth,
+              position: const Point(0, 0),
+            ),
+        mouthRight:
+            mouthRight ??
+            FaceLandmark(
+              type: FaceLandmarkType.rightMouth,
+              position: const Point(0, 0),
+            ),
+        mouthBottom:
+            mouthBottom ??
+            FaceLandmark(
+              type: FaceLandmarkType.bottomMouth,
+              position: const Point(0, 0),
+            ),
         face: faceContour,
         leftEyebrowTop: leftEyebrowTop,
         leftEyebrowBottom: leftEyebrowBottom,
@@ -106,8 +148,10 @@ class _ImagePageState extends State<ImagePage> {
     return null;
   }
 
-  void _handleCompare() {
-    if (image1 != null && image2 != null) {
+  void _handleCompare() async {
+    if (image1 != null && image2 != null && file1 != null && file2 != null) {
+      await saveToFirestoreWithImages(imageFile1: file1!, imageFile2: file2!);
+
       Navigator.pushNamed(
         context,
         '/result',
@@ -121,6 +165,24 @@ class _ImagePageState extends State<ImagePage> {
         ),
       );
     }
+  }
+
+  Future<void> saveToFirestore() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final uid = user.uid;
+    final now = DateTime.now();
+    final title = "Sync Your Snap";
+
+    await FirebaseFirestore.instance.collection('moapp_final').add({
+      'uid': uid,
+      'title': title,
+      'created': now,
+      'modified': now,
+      'image1': 'image1 selected', // 실제 URL 대신 지금은 간단히 텍스트
+      'image2': 'image2 selected',
+    });
   }
 
   @override
