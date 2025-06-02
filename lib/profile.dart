@@ -52,7 +52,15 @@ class ProfilePage extends StatelessWidget {
     final profileImage = isAnonymous ? null : user?.photoURL;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(
+        title: const Text('Profile'),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/');
+            },
+          ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
