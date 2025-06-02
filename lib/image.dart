@@ -136,7 +136,15 @@ class _ImagePageState extends State<ImagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Sync Your Snap")),
+      appBar: AppBar(
+        title: const Text('Sync Your Snap'),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/');
+            },
+          ),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [

@@ -164,7 +164,23 @@ class _ResultPageState extends State<ResultPage> {
     
     return Scaffold(
       
-      appBar: AppBar(title: const Text("Comparison Result")),
+      appBar: AppBar(
+        title: const Text('Comparison Result'),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/profile');
+            },
+          ),
+        ],
+      ),
       body: Stack(
         children: [
           ListView(
