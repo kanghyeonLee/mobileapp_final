@@ -229,134 +229,134 @@ Future<void> _initializeCamera(CameraDescription cameraDescription) async {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sync Your Snap'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pushReplacementNamed(context, '/'),
+  // Updated Flutter UI with:
+// 1. Dual image selection (Image1 & Image2)
+// 2. Option bottom sheet to pick from Camera or Gallery
+// 3. Display both selected images before comparison
+
+// Replace your current `build` method with this adjusted structure
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Sync Your Snap'),
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => Navigator.pushReplacementNamed(context, '/'),
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.switch_camera),
+          onPressed: _toggleCamera,
         ),
-        actions: [ IconButton(
-      icon: const Icon(Icons.switch_camera),
-      onPressed: _toggleCamera,
-    ),],
+      ],
+    ),
+    body: ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        const Text("Step 1: Image 1 선택"),
+        const SizedBox(height: 8),
+        _buildImageSelectionWidget(1),
+        const SizedBox(height: 24),
+        const Text("Step 2: Image 2 선택"),
+        const SizedBox(height: 8),
+        _buildImageSelectionWidget(2),
+        const SizedBox(height: 24),
+        ElevatedButton(
+          onPressed: image1 != null && image2 != null
+              ? () {
+                  Navigator.pushNamed(context, '/result', arguments: {
+                    'image1': image1,
+                    'image2': image2,
+                  });
+                }
+              : null,
+          child: const Text("Compare Faces"),
+        ),
+        const SizedBox(height: 12),
+        if (image1 != null) image1!.image,
+        const SizedBox(height: 12),
+        if (image2 != null) image2!.image,
+      ],
+    ),
+  );
+}
+
+Widget _buildImageSelectionWidget(int imageNumber) {
+  return GestureDetector(
+    onTap: () => _showImageSourceOptions(imageNumber),
+    child: Container(
+      height: 180,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade300,
+        borderRadius: BorderRadius.circular(12),
       ),
-      body: image1 == null
-    ? ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          const Text(
-            "Step 1: 갤러리에서 이미지 1을 선택하세요.",
-            style: TextStyle(fontSize: 16),
-          ),
-          const SizedBox(height: 16),
-          GestureDetector(
-            onTap: () async {
-              final result = await _detectImage(); 
-              if (!mounted) return;
-              if (result != null && result.title == "Human") {
+      child: Center(
+        child: Text(
+          imageNumber == 1
+              ? (image1 == null ? "Select Image 1" : "Reselect Image 1")
+              : (image2 == null ? "Select Image 2" : "Reselect Image 2"),
+          style: const TextStyle(fontSize: 18),
+        ),
+      ),
+    ),
+  );
+}
+
+void _showImageSourceOptions(int imageNumber) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return SafeArea(
+        child: Wrap(
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Gallery'),
+              onTap: () async {
+                Navigator.of(context).pop();
+                final result = await _detectImage();
+                if (!mounted || result == null) return;
                 setState(() {
-                  image1 = result;
-                });
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("얼굴이 감지되지 않았습니다.")),
-                );
-              }
-            },
-            child: Container(
-              height: 200,
-              color: Colors.grey.shade300,
-              child: const Center(
-                child: Text("Tap to select Image 1", style: TextStyle(fontSize: 18)),
-              ),
-            ),
-          ),
-        ],
-      )
-    : Stack(
-        children: [
-          
-          FutureBuilder(
-            future: _initializeCameraControllerFuture, 
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return CameraPreview(_cameraController);
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            },
-          ),
-
-          
-          if (image1 != null)
-            Opacity(
-              opacity: 0.3,
-              child: SizedBox.expand(
-                child: image1!.image, 
-              ),
-            ),
-
-         
-          const Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.only(top: 32),
-              child: Text(
-                "Image 1을 참고해서 표정을 맞춰보세요!",
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
-            ),
-          ),
-
-          
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  try {
-                    await _initializeCameraControllerFuture;
-                    final XFile photo = await _cameraController.takePicture();
-                    final inputImage = InputImage.fromFilePath(photo.path);
-                    final faces = await _faceDetector.processImage(inputImage);
-                    if (faces.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("얼굴이 감지되지 않았습니다.")),
-                      );
-                      return;
-                    }
-                    final result = await _analyzeImage(photo, faces.first); 
-                    setState(() {
-                      image2 = result;
-                    });
-
-                    Navigator.pushNamed(context, '/result', arguments: {
-                      'image1': image1,
-                      'image2': image2,
-                    });
-                  } catch (e) {
-                    debugPrint("Camera error: $e");
+                  if (imageNumber == 1) {
+                    image1 = result;
+                  } else {
+                    image2 = result;
                   }
-                },
-                icon: const Icon(Icons.camera),
-                label: const Text('Take Image 2 & Compare'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-              ),
+                });
+              },
             ),
-          ),
-        ],
-      ),
-    );
-  }
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Camera'),
+              onTap: () async {
+                Navigator.of(context).pop();
+                await _initializeCamera(_cameras[_selectedCameraIndex]);
+                await _initializeCameraControllerFuture;
+                final XFile photo = await _cameraController.takePicture();
+                final inputImage = InputImage.fromFilePath(photo.path);
+                final faces = await _faceDetector.processImage(inputImage);
+                if (faces.isNotEmpty) {
+                  final result = await _analyzeImage(photo, faces.first);
+                  if (!mounted) return;
+                  setState(() {
+                    if (imageNumber == 1) {
+                      image1 = result;
+                    } else {
+                      image2 = result;
+                    }
+                  });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("얼굴이 감지되지 않았습니다.")),
+                  );
+                }
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
 }
