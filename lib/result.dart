@@ -1,9 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'model/imageobj.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 class ResultPage extends StatelessWidget {
   const ResultPage({Key? key}) : super(key: key);
@@ -39,14 +37,9 @@ class ResultPage extends StatelessWidget {
       return browGap / faceHeight;
     }
 
-    final shadowColor = const Color(0xFFCCCCCC);
-
-    int touchedGroupIndex = -1;
-    int rotationTurns = 1;
     final args = ModalRoute.of(context)!.settings.arguments as Map;
     final ImageObj image1 = args['image1'];
     final ImageObj image2 = args['image2'];
-    final diffsmiling = (image1.smiling - image2.smiling).abs();
     final upperLipBottom1 = image1.upperLipBottom.points;
     final lowerLipTop1 = image1.lowerLipTop.points;
     final upperLipBottom2 = image2.upperLipBottom.points;
@@ -91,78 +84,78 @@ class ResultPage extends StatelessWidget {
           ListView(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
             children: List.generate(labels.length, (index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      labels[index],
-                      style: const TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
-                      ),
+
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    labels[index],
+                    style: const TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
                     ),
-                    const SizedBox(height: 10),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // 왼쪽 라벨
-                        Column(
+                  ),
+                  const SizedBox(height: 10,),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          
+                          Row(
+                            children: [
+                              Text(
+                                "Image 1",
+                                style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(width: 4),
+                             
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Text(
+                                "Image 2",
+                                style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(width: 4),
+                              
+                            ],
+                          ),
+                        ],
+                      ),
+                  
+                     
+                      Expanded(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                Text(
-                                  "Image 1",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text(
-                                  "Image 2",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                              ],
-                            ),
-                          ],
-                        ),
+                          
+                            TweenAnimationBuilder<double>(
+                              tween: Tween(begin: 0, end: values1[index].clamp(0.0, 1.0)),
+                              duration: const Duration(milliseconds: 800),
+                              builder: (context, value, _) {
+                                final color = Color.lerp(Colors.red, Colors.green, value);
+                                return Stack(
+                                  children: [
+                                    Container(
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[300],
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                    FractionallySizedBox(
+                                      widthFactor: value,
+                                      child: Container(
 
-                        // 중앙: 애니메이션 바
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // image1 bar
-                              TweenAnimationBuilder<double>(
-                                tween: Tween(
-                                  begin: 0,
-                                  end: values1[index].clamp(0.0, 1.0),
-                                ),
-                                duration: const Duration(milliseconds: 800),
-                                builder: (context, value, _) {
-                                  final color = Color.lerp(
-                                    Colors.red,
-                                    Colors.green,
-                                    value,
-                                  );
-                                  return Stack(
-                                    children: [
-                                      Container(
+            
                                         height: 20,
                                         decoration: BoxDecoration(
                                           color: Colors.grey[300],
@@ -171,6 +164,27 @@ class ResultPage extends StatelessWidget {
                                           ),
                                         ),
                                       ),
+
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 4),
+                           
+                            TweenAnimationBuilder<double>(
+                              tween: Tween(begin: 0, end: values2[index].clamp(0.0, 1.0)),
+                              duration: const Duration(milliseconds: 800),
+                              builder: (context, value, _) {
+                                final color = Color.lerp(Colors.red, Colors.green, value);
+                                return Stack(
+                                  children: [
+                                    Container(
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[300],
+                                        borderRadius: BorderRadius.circular(10),
+
                                       FractionallySizedBox(
                                         widthFactor: value,
                                         child: Container(
@@ -182,6 +196,7 @@ class ResultPage extends StatelessWidget {
                                             ),
                                           ),
                                         ),
+
                                       ),
                                     ],
                                   );
@@ -212,21 +227,39 @@ class ResultPage extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      FractionallySizedBox(
-                                        widthFactor: value,
-                                        child: Container(
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                            color: color,
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
+
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                  
+                      const SizedBox(width: 12),
+                  
+                      
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "${(values1[index] * 100).toStringAsFixed(0)}%",
+                                style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(width: 4),
+                             
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Text(
+                                "${(values2[index] * 100).toStringAsFixed(0)}%",
+                                style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
+
                               ),
                             ],
                           ),
