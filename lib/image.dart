@@ -35,6 +35,7 @@ class _ImagePageState extends State<ImagePage> {
         face.contours[type] ?? FaceContour(type: type, points: []);
 
     return ImageObj(
+      filePath: file.path,
       title: "Human",
       image: Container(
         constraints: const BoxConstraints.expand(),
@@ -152,6 +153,7 @@ class _ImagePageState extends State<ImagePage> {
       final headEulerAngleZ = hasHuman ? (face.headEulerAngleZ ?? 0.0) : 0.0;
 
       return ImageObj(
+        filePath: item.path,
         title: hasHuman ? "Human" : "No Human",
         image: Container(
           constraints: const BoxConstraints.expand(),

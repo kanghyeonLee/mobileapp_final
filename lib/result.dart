@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'model/imageobj.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ResultPage extends StatelessWidget {
   const ResultPage({Key? key}) : super(key: key);
@@ -50,7 +54,7 @@ class ResultPage extends StatelessWidget {
     final rightEyebrow1 = image1.rightEyebrowTop.points;
     final leftEyebrow2 = image2.leftEyebrowTop.points;
     final rightEyebrow2 = image2.rightEyebrowTop.points;
-
+    final user = FirebaseAuth.instance.currentUser;
     final eyebrowGap1 = getEyebrowGap(leftEyebrow1, rightEyebrow1, image1);
     final eyebrowGap2 = getEyebrowGap(leftEyebrow2, rightEyebrow2, image2);
     final List<String> labels = [
@@ -76,6 +80,45 @@ class ResultPage extends StatelessWidget {
       mouthGap2,
       eyebrowGap2,
     ];
+
+    Future<String> uploadImageToStorage(String filePath, String fileName) async {
+      final ref = FirebaseStorage.instance.ref().child('comparison_images/$fileName');
+      await ref.putFile(File(filePath));
+      return await ref.getDownloadURL();
+    }
+
+    Future<void> saveResultToFirestore(ImageObj image1, ImageObj image2) async {
+      if(user == null) return;
+      try {
+        final url1 = await uploadImageToStorage(image1.filePath, 'image1_${DateTime.now().millisecondsSinceEpoch}.jpg');
+        final url2 = await uploadImageToStorage(image2.filePath, 'image2_${DateTime.now().millisecondsSinceEpoch}.jpg');
+        await FirebaseFirestore.instance.collection('comparison_results').add({
+          'timestamp': FieldValue.serverTimestamp(),
+          'image1': {
+            'smiling': image1.smiling,
+            'leftEyeOpen': image1.leftEyeOpenProb,
+            'rightEyeOpen': image1.rightEyeOpenProb,
+            'mouthGap': getMouthGap(image1.upperLipBottom.points, image1.lowerLipTop.points, image1),
+            'eyebrowGap': getEyebrowGap(image1.leftEyebrowTop.points, image1.rightEyebrowTop.points, image1),
+            'url': url1
+          },
+          'image2': {
+            'smiling': image2.smiling,
+            'leftEyeOpen': image2.leftEyeOpenProb,
+            'rightEyeOpen': image2.rightEyeOpenProb,
+            'mouthGap': getMouthGap(image2.upperLipBottom.points, image2.lowerLipTop.points, image2),
+            'eyebrowGap': getEyebrowGap(image2.leftEyebrowTop.points, image2.rightEyebrowTop.points, image2),
+            'url': url2
+          },
+          'uid': user.uid,
+          'isAnonymous': user.isAnonymous,
+          'created': FieldValue.serverTimestamp(),
+          'modified': FieldValue.serverTimestamp(),
+        });
+      } catch (e) {
+        debugPrint("Firestore save error: $e");
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(title: const Text("Comparison Result")),
@@ -310,25 +353,42 @@ class ResultPage extends StatelessWidget {
 
           Align(
             alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/home');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 0, 102, 204),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 32,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    await saveResultToFirestore(image1, image2);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Saved to Firestore!')),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 30),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
+                  child: const Text('Save Result'),
                 ),
-                child: const Text('Go to home.dart'),
-              ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/home');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 0, 102, 204),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: const Text('Go to home.dart'),
+                ),
+              ],
             ),
           ),
         ],
