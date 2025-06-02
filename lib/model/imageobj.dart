@@ -5,6 +5,7 @@ ImageObj? selectedImage1;
 ImageObj? selectedImage2;
 
 class ImageObj {
+  final String filePath;
   final Face face;
   final String title;
   final Widget image;
@@ -34,6 +35,7 @@ class ImageObj {
   final FaceContour noseBottom;
 
   ImageObj({
+    required this.filePath,
     required this.title,
     required this.image,
     required this.smiling,
