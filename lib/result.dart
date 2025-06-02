@@ -17,7 +17,7 @@ class ResultPage extends StatelessWidget {
       final faceHeight = image.face.boundingBox.height;
       return mouthGap / faceHeight;
     }
-
+ 
     double getEyebrowGap(List<Point<int>> leftEyebrow, List<Point<int>> rightEyebrow,ImageObj image) {
       if (leftEyebrow.isEmpty || rightEyebrow.isEmpty) return 0.0;
 
