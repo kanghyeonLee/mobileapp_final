@@ -27,8 +27,8 @@ class ProfilePage extends StatelessWidget {
     );
 
     if (shouldLogout == true) {
+      logoutAndCleanupIfAnonymous();
       final user = FirebaseAuth.instance.currentUser;
-
       // 로그아웃 처리
       if (user != null && !user.isAnonymous) {
         // 구글 로그인 캐시도 함께 삭제
@@ -72,12 +72,6 @@ class ProfilePage extends StatelessWidget {
       for (var doc in userDocs.docs) {
         await doc.reference.delete();
       }
-
-      // 3. Firebase 인증 로그아웃
-      await FirebaseAuth.instance.signOut();
-    } else {
-      // 일반 사용자면 그냥 로그아웃만
-      await FirebaseAuth.instance.signOut();
     }
   }
 
@@ -138,7 +132,6 @@ class ProfilePage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () async {
-                  await logoutAndCleanupIfAnonymous();
                   await _signOut(context);
                   Navigator.pushReplacementNamed(context, '/login');
                 },
