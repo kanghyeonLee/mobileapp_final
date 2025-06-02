@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -21,13 +22,46 @@ class _LoginPageState extends State<LoginPage> {
       idToken: googleAuth?.idToken,
     );
 
+    final userCredential = await FirebaseAuth.instance.signInWithCredential(
+      credential,
+    );
+    if (userCredential.user != null) {
+      await saveUserInfo(userCredential.user!); // 추가
+      Navigator.pushReplacementNamed(context, '/');
+    }
+
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   Future<UserCredential> signInAnonymous() async {
     final userCredential = await FirebaseAuth.instance.signInAnonymously();
     print("Signed in with temporary account.");
+    await saveUserInfo(userCredential.user!); // 추가
+    Navigator.pushReplacementNamed(context, '/');
     return userCredential;
+  }
+
+  Future<void> saveUserInfo(User user) async {
+    final docRef = FirebaseFirestore.instance.collection('users').doc(user.uid);
+
+    final userData = {
+      'uid': user.uid,
+      'isAnonymous': user.isAnonymous,
+      'created': FieldValue.serverTimestamp(),
+      'lastLogin': FieldValue.serverTimestamp(),
+    };
+
+    // Google 사용자라면 이메일과 이름도 저장
+    if (!user.isAnonymous) {
+      if (user.email != null) {
+        userData['email'] = user.email!;
+      }
+      if (user.displayName != null) {
+        userData['displayName'] = user.displayName!;
+      }
+    }
+
+    await docRef.set(userData, SetOptions(merge: true));
   }
 
   @override
@@ -68,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                   try {
                     final userCredential = await signInWithGoogle();
                     if (userCredential.user != null) {
+                      await saveUserInfo(userCredential.user!);
                       Navigator.pushReplacementNamed(context, '/');
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
