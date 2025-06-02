@@ -8,14 +8,13 @@ import 'package:camera/camera.dart';
 import 'model/imageobj.dart';
 
 class ImagePage extends StatefulWidget {
-    const ImagePage({Key? key}) : super(key: key);
+  const ImagePage({Key? key}) : super(key: key);
 
-    @override
-    _ImagePageState createState() => _ImagePageState();
-  }
+  @override
+  _ImagePageState createState() => _ImagePageState();
+}
 
-  class _ImagePageState extends State<ImagePage> {
-
+class _ImagePageState extends State<ImagePage> {
   List<CameraDescription> _cameras = [];
   int _selectedCameraIndex = 0;
   late CameraController _cameraController;
@@ -28,69 +27,71 @@ class ImagePage extends StatefulWidget {
   }
 
   Future<ImageObj> _analyzeImage(XFile file, Face face) async {
+    FaceLandmark? getLandmark(FaceLandmarkType type) =>
+        face.landmarks[type] ??
+        FaceLandmark(type: type, position: const Point(0, 0));
 
-  
-  FaceLandmark? getLandmark(FaceLandmarkType type) =>
-      face.landmarks[type] ?? FaceLandmark(type: type, position: const Point(0, 0));
+    FaceContour getContour(FaceContourType type) =>
+        face.contours[type] ?? FaceContour(type: type, points: []);
 
-  FaceContour getContour(FaceContourType type) =>
-      face.contours[type] ?? FaceContour(type: type, points: []);
+    return ImageObj(
+      filePath: file.path,
+      title: "Human",
+      image: Container(
+        constraints: const BoxConstraints.expand(),
+        child: Image(image: XFileImage(file), fit: BoxFit.contain),
+      ),
+      smiling: face.smilingProbability ?? 0.0,
+      leftEyeOpenProb: face.leftEyeOpenProbability ?? 0.0,
+      rightEyeOpenProb: face.rightEyeOpenProbability ?? 0.0,
+      headTurnY: face.headEulerAngleY ?? 0.0,
+      headTiltZ: face.headEulerAngleZ ?? 0.0,
+      nose: getLandmark(FaceLandmarkType.noseBase)!,
+      leftEar: getLandmark(FaceLandmarkType.leftEar)!,
+      rightEar: getLandmark(FaceLandmarkType.rightEar)!,
+      mouthLeft: getLandmark(FaceLandmarkType.leftMouth)!,
+      mouthRight: getLandmark(FaceLandmarkType.rightMouth)!,
+      mouthBottom: getLandmark(FaceLandmarkType.bottomMouth)!,
+      face: face,
+      faceContour: getContour(FaceContourType.face),
+      leftEyebrowTop: getContour(FaceContourType.leftEyebrowTop),
+      leftEyebrowBottom: getContour(FaceContourType.leftEyebrowBottom),
+      rightEyebrowTop: getContour(FaceContourType.rightEyebrowTop),
+      rightEyebrowBottom: getContour(FaceContourType.rightEyebrowBottom),
+      leftEye: getContour(FaceContourType.leftEye),
+      rightEye: getContour(FaceContourType.rightEye),
+      upperLipTop: getContour(FaceContourType.upperLipTop),
+      upperLipBottom: getContour(FaceContourType.upperLipBottom),
+      lowerLipTop: getContour(FaceContourType.lowerLipTop),
+      lowerLipBottom: getContour(FaceContourType.lowerLipBottom),
+      noseBridge: getContour(FaceContourType.noseBridge),
+      noseBottom: getContour(FaceContourType.noseBottom),
+    );
+  }
 
-  return ImageObj(
-    filePath: file.path,
-    title: "Human",
-    image: Container(
-      constraints: const BoxConstraints.expand(),
-      child: Image(image: XFileImage(file), fit: BoxFit.contain),
-    ),
-    smiling: face.smilingProbability ?? 0.0,
-    leftEyeOpenProb: face.leftEyeOpenProbability ?? 0.0,
-    rightEyeOpenProb: face.rightEyeOpenProbability ?? 0.0,
-    headTurnY: face.headEulerAngleY ?? 0.0,
-    headTiltZ: face.headEulerAngleZ ?? 0.0,
-    nose: getLandmark(FaceLandmarkType.noseBase)!,
-    leftEar: getLandmark(FaceLandmarkType.leftEar)!,
-    rightEar: getLandmark(FaceLandmarkType.rightEar)!,
-    mouthLeft: getLandmark(FaceLandmarkType.leftMouth)!,
-    mouthRight: getLandmark(FaceLandmarkType.rightMouth)!,
-    mouthBottom: getLandmark(FaceLandmarkType.bottomMouth)!,
-    face: face,
-    faceContour: getContour(FaceContourType.face),
-    leftEyebrowTop: getContour(FaceContourType.leftEyebrowTop),
-    leftEyebrowBottom: getContour(FaceContourType.leftEyebrowBottom),
-    rightEyebrowTop: getContour(FaceContourType.rightEyebrowTop),
-    rightEyebrowBottom: getContour(FaceContourType.rightEyebrowBottom),
-    leftEye: getContour(FaceContourType.leftEye),
-    rightEye: getContour(FaceContourType.rightEye),
-    upperLipTop: getContour(FaceContourType.upperLipTop),
-    upperLipBottom: getContour(FaceContourType.upperLipBottom),
-    lowerLipTop: getContour(FaceContourType.lowerLipTop),
-    lowerLipBottom: getContour(FaceContourType.lowerLipBottom),
-    noseBridge: getContour(FaceContourType.noseBridge),
-    noseBottom: getContour(FaceContourType.noseBottom),
-  );
-}
+  Future<void> _setupCameras() async {
+    _cameras = await availableCameras();
+    _selectedCameraIndex = _cameras.indexWhere(
+      (cam) => cam.lensDirection == CameraLensDirection.front,
+    );
+    if (_selectedCameraIndex == -1) _selectedCameraIndex = 0; // fallback
+    await _initializeCamera(_cameras[_selectedCameraIndex]);
+  }
 
-Future<void> _setupCameras() async {
-  _cameras = await availableCameras();
-  _selectedCameraIndex = _cameras.indexWhere(
-    (cam) => cam.lensDirection == CameraLensDirection.front,
-  );
-  if (_selectedCameraIndex == -1) _selectedCameraIndex = 0; // fallback
-  await _initializeCamera(_cameras[_selectedCameraIndex]);
-}
+  void _toggleCamera() async {
+    if (_cameras.isEmpty) return;
+    _selectedCameraIndex = (_selectedCameraIndex + 1) % _cameras.length;
+    await _initializeCamera(_cameras[_selectedCameraIndex]);
+  }
 
-void _toggleCamera() async {
-  if (_cameras.isEmpty) return;
-  _selectedCameraIndex = (_selectedCameraIndex + 1) % _cameras.length;
-  await _initializeCamera(_cameras[_selectedCameraIndex]);
-}
-
-Future<void> _initializeCamera(CameraDescription cameraDescription) async {
-  _cameraController = CameraController(cameraDescription, ResolutionPreset.medium);
-  _initializeCameraControllerFuture = _cameraController.initialize();
-  setState(() {});
-}
+  Future<void> _initializeCamera(CameraDescription cameraDescription) async {
+    _cameraController = CameraController(
+      cameraDescription,
+      ResolutionPreset.medium,
+    );
+    _initializeCameraControllerFuture = _cameraController.initialize();
+    setState(() {});
+  }
 
   final _faceDetector = FaceDetector(
     options: FaceDetectorOptions(
@@ -114,7 +115,6 @@ Future<void> _initializeCamera(CameraDescription cameraDescription) async {
 
       final Face face = faces.first;
 
-      
       final nose = hasHuman ? face.landmarks[FaceLandmarkType.noseBase] : null;
       final leftEar =
           hasHuman ? face.landmarks[FaceLandmarkType.leftEar] : null;
@@ -127,7 +127,6 @@ Future<void> _initializeCamera(CameraDescription cameraDescription) async {
       final mouthBottom =
           hasHuman ? face.landmarks[FaceLandmarkType.bottomMouth] : null;
 
-      
       FaceContour getContour(FaceContourType type) =>
           face.contours[type] ?? FaceContour(type: type, points: []);
 
@@ -145,7 +144,6 @@ Future<void> _initializeCamera(CameraDescription cameraDescription) async {
       final noseBridge = getContour(FaceContourType.noseBridge);
       final noseBottom = getContour(FaceContourType.noseBottom);
 
-      
       final smiling = hasHuman ? (face.smilingProbability ?? 0.0) : 0.0;
       final leftEyeOpenProbability =
           hasHuman ? (face.leftEyeOpenProbability ?? 0.0) : 0.0;
@@ -154,7 +152,6 @@ Future<void> _initializeCamera(CameraDescription cameraDescription) async {
       final headEulerAngleY = hasHuman ? (face.headEulerAngleY ?? 0.0) : 0.0;
       final headEulerAngleZ = hasHuman ? (face.headEulerAngleZ ?? 0.0) : 0.0;
 
-     
       return ImageObj(
         filePath: item.path,
         title: hasHuman ? "Human" : "No Human",
