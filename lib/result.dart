@@ -8,8 +8,11 @@ class ResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    double getMouthGap(List<Point<int>> upper, List<Point<int>> lower, ImageObj image){
+    double getMouthGap(
+      List<Point<int>> upper,
+      List<Point<int>> lower,
+      ImageObj image,
+    ) {
       if (upper.isEmpty || lower.isEmpty) return 0.0;
       final centerUpper = upper[upper.length ~/ 2];
       final centerLower = lower[lower.length ~/ 2];
@@ -29,8 +32,7 @@ class ResultPage extends StatelessWidget {
 
       return browGap / faceHeight;
     }
-    
-  
+
     final args = ModalRoute.of(context)!.settings.arguments as Map;
     final ImageObj image1 = args['image1'];
     final ImageObj image2 = args['image2'];
@@ -60,7 +62,7 @@ class ResultPage extends StatelessWidget {
       image1.leftEyeOpenProb,
       image1.rightEyeOpenProb,
       mouthGap1,
-      eyebrowGap1
+      eyebrowGap1,
     ];
 
     final List<double> values2 = [
@@ -68,7 +70,7 @@ class ResultPage extends StatelessWidget {
       image2.leftEyeOpenProb,
       image2.rightEyeOpenProb,
       mouthGap2,
-      eyebrowGap2
+      eyebrowGap2,
     ];
 
     return Scaffold(
@@ -78,6 +80,7 @@ class ResultPage extends StatelessWidget {
           ListView(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
             children: List.generate(labels.length, (index) {
+
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
               child: Column(
@@ -147,12 +150,17 @@ class ResultPage extends StatelessWidget {
                                     FractionallySizedBox(
                                       widthFactor: value,
                                       child: Container(
+
+            
                                         height: 20,
                                         decoration: BoxDecoration(
-                                          color: color,
-                                          borderRadius: BorderRadius.circular(10),
+                                          color: Colors.grey[300],
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
                                         ),
                                       ),
+
                                     ),
                                   ],
                                 );
@@ -172,17 +180,50 @@ class ResultPage extends StatelessWidget {
                                       decoration: BoxDecoration(
                                         color: Colors.grey[300],
                                         borderRadius: BorderRadius.circular(10),
+
+                                      FractionallySizedBox(
+                                        widthFactor: value,
+                                        child: Container(
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                            color: color,
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+
                                       ),
-                                    ),
-                                    FractionallySizedBox(
-                                      widthFactor: value,
-                                      child: Container(
+                                    ],
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 4),
+                              // image2 bar
+                              TweenAnimationBuilder<double>(
+                                tween: Tween(
+                                  begin: 0,
+                                  end: values2[index].clamp(0.0, 1.0),
+                                ),
+                                duration: const Duration(milliseconds: 800),
+                                builder: (context, value, _) {
+                                  final color = Color.lerp(
+                                    Colors.red,
+                                    Colors.green,
+                                    value,
+                                  );
+                                  return Stack(
+                                    children: [
+                                      Container(
                                         height: 20,
                                         decoration: BoxDecoration(
-                                          color: color,
-                                          borderRadius: BorderRadius.circular(10),
+                                          color: Colors.grey[300],
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
                                         ),
                                       ),
+
                                     ),
                                   ],
                                 );
@@ -214,19 +255,53 @@ class ResultPage extends StatelessWidget {
                               Text(
                                 "${(values2[index] * 100).toStringAsFixed(0)}%",
                                 style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
+
                               ),
-                              const SizedBox(width: 4),
-                              
                             ],
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          }),
+                        ),
+
+                        const SizedBox(width: 12),
+
+                        // 오른쪽 퍼센트 + 아이콘
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "${(values1[index] * 100).toStringAsFixed(0)}%",
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text(
+                                  "${(values2[index] * 100).toStringAsFixed(0)}%",
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }),
           ),
 
           Align(

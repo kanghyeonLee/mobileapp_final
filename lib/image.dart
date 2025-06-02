@@ -115,11 +115,16 @@ Future<void> _initializeCamera(CameraDescription cameraDescription) async {
 
       
       final nose = hasHuman ? face.landmarks[FaceLandmarkType.noseBase] : null;
-      final leftEar = hasHuman ? face.landmarks[FaceLandmarkType.leftEar] : null;
-      final rightEar = hasHuman ? face.landmarks[FaceLandmarkType.rightEar] : null;
-      final mouthLeft = hasHuman ? face.landmarks[FaceLandmarkType.leftMouth] : null;
-      final mouthRight = hasHuman ? face.landmarks[FaceLandmarkType.rightMouth] : null;
-      final mouthBottom = hasHuman ? face.landmarks[FaceLandmarkType.bottomMouth] : null;
+      final leftEar =
+          hasHuman ? face.landmarks[FaceLandmarkType.leftEar] : null;
+      final rightEar =
+          hasHuman ? face.landmarks[FaceLandmarkType.rightEar] : null;
+      final mouthLeft =
+          hasHuman ? face.landmarks[FaceLandmarkType.leftMouth] : null;
+      final mouthRight =
+          hasHuman ? face.landmarks[FaceLandmarkType.rightMouth] : null;
+      final mouthBottom =
+          hasHuman ? face.landmarks[FaceLandmarkType.bottomMouth] : null;
 
       
       FaceContour getContour(FaceContourType type) =>
@@ -141,8 +146,10 @@ Future<void> _initializeCamera(CameraDescription cameraDescription) async {
 
       
       final smiling = hasHuman ? (face.smilingProbability ?? 0.0) : 0.0;
-      final leftEyeOpenProbability = hasHuman ? (face.leftEyeOpenProbability ?? 0.0) : 0.0;
-      final rightEyeOpenProbability = hasHuman ? (face.rightEyeOpenProbability ?? 0.0) : 0.0;
+      final leftEyeOpenProbability =
+          hasHuman ? (face.leftEyeOpenProbability ?? 0.0) : 0.0;
+      final rightEyeOpenProbability =
+          hasHuman ? (face.rightEyeOpenProbability ?? 0.0) : 0.0;
       final headEulerAngleY = hasHuman ? (face.headEulerAngleY ?? 0.0) : 0.0;
       final headEulerAngleZ = hasHuman ? (face.headEulerAngleZ ?? 0.0) : 0.0;
 
@@ -158,12 +165,42 @@ Future<void> _initializeCamera(CameraDescription cameraDescription) async {
         rightEyeOpenProb: rightEyeOpenProbability,
         headTurnY: headEulerAngleY,
         headTiltZ: headEulerAngleZ,
-        nose: nose ?? FaceLandmark(type: FaceLandmarkType.noseBase, position: const Point(0, 0)),
-        leftEar: leftEar ?? FaceLandmark(type: FaceLandmarkType.leftEar, position: const Point(0, 0)),
-        rightEar: rightEar ?? FaceLandmark(type: FaceLandmarkType.rightEar, position: const Point(0, 0)),
-        mouthLeft: mouthLeft ?? FaceLandmark(type: FaceLandmarkType.leftMouth, position: const Point(0, 0)),
-        mouthRight: mouthRight ?? FaceLandmark(type: FaceLandmarkType.rightMouth, position: const Point(0, 0)),
-        mouthBottom: mouthBottom ?? FaceLandmark(type: FaceLandmarkType.bottomMouth, position: const Point(0, 0)),
+        nose:
+            nose ??
+            FaceLandmark(
+              type: FaceLandmarkType.noseBase,
+              position: const Point(0, 0),
+            ),
+        leftEar:
+            leftEar ??
+            FaceLandmark(
+              type: FaceLandmarkType.leftEar,
+              position: const Point(0, 0),
+            ),
+        rightEar:
+            rightEar ??
+            FaceLandmark(
+              type: FaceLandmarkType.rightEar,
+              position: const Point(0, 0),
+            ),
+        mouthLeft:
+            mouthLeft ??
+            FaceLandmark(
+              type: FaceLandmarkType.leftMouth,
+              position: const Point(0, 0),
+            ),
+        mouthRight:
+            mouthRight ??
+            FaceLandmark(
+              type: FaceLandmarkType.rightMouth,
+              position: const Point(0, 0),
+            ),
+        mouthBottom:
+            mouthBottom ??
+            FaceLandmark(
+              type: FaceLandmarkType.bottomMouth,
+              position: const Point(0, 0),
+            ),
         face: face,
         faceContour: faceContour,
         leftEyebrowTop: leftEyebrowTop,
