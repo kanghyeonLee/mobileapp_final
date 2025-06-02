@@ -37,6 +37,7 @@ class ImagePage extends StatefulWidget {
       face.contours[type] ?? FaceContour(type: type, points: []);
 
   return ImageObj(
+    filePath: file.path,
     title: "Human",
     image: Container(
       constraints: const BoxConstraints.expand(),
@@ -155,6 +156,7 @@ Future<void> _initializeCamera(CameraDescription cameraDescription) async {
 
      
       return ImageObj(
+        filePath: item.path,
         title: hasHuman ? "Human" : "No Human",
         image: Container(
           constraints: const BoxConstraints.expand(),
