@@ -7,8 +7,21 @@ import 'model/imageobj.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-class ResultPage extends StatelessWidget {
+class ResultPage extends StatefulWidget {
   const ResultPage({Key? key}) : super(key: key);
+
+  @override
+  State<ResultPage> createState() => _ResultPageState();
+}
+
+class _ResultPageState extends State<ResultPage> {
+
+  final titleController = TextEditingController();
+  @override
+  void dispose(){
+    titleController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +70,7 @@ class ResultPage extends StatelessWidget {
     final user = FirebaseAuth.instance.currentUser;
     final eyebrowGap1 = getEyebrowGap(leftEyebrow1, rightEyebrow1, image1);
     final eyebrowGap2 = getEyebrowGap(leftEyebrow2, rightEyebrow2, image2);
+
     final List<String> labels = [
       'Smile',
       'Left Eye Open',
@@ -141,19 +155,40 @@ class ResultPage extends StatelessWidget {
           'isAnonymous': user.isAnonymous,
           'created': FieldValue.serverTimestamp(),
           'modified': FieldValue.serverTimestamp(),
+          'title':titleController.text.trim(),
         });
       } catch (e) {
         debugPrint("Firestore save error: $e");
       }
     }
-
+    
     return Scaffold(
+      
       appBar: AppBar(title: const Text("Comparison Result")),
       body: Stack(
         children: [
           ListView(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-            children: List.generate(labels.length, (index) {
+            children: [
+               Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+                child: TextField(
+                  controller: titleController,
+                  style: const TextStyle(fontSize: 18),
+                  decoration: InputDecoration(
+                    labelText: 'Title',
+                    hintText: 'Enter a title',
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    enabledBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 2),
+                    ),
+                  ),
+                ),
+              ),
+              ...List.generate(labels.length, (index) {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12.0),
                 child: Column(
@@ -331,7 +366,7 @@ class ResultPage extends StatelessWidget {
                   ],
                 ),
               );
-            }),
+            }),]
           ),
 
           Align(
