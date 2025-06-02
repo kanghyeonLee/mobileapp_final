@@ -81,34 +81,61 @@ class ResultPage extends StatelessWidget {
       eyebrowGap2,
     ];
 
-    Future<String> uploadImageToStorage(String filePath, String fileName) async {
-      final ref = FirebaseStorage.instance.ref().child('comparison_images/$fileName');
+    Future<String> uploadImageToStorage(
+      String filePath,
+      String fileName,
+    ) async {
+      final ref = FirebaseStorage.instance.ref().child(
+        'comparison_images/$fileName',
+      );
       await ref.putFile(File(filePath));
       return await ref.getDownloadURL();
     }
 
     Future<void> saveResultToFirestore(ImageObj image1, ImageObj image2) async {
-      if(user == null) return;
+      if (user == null) return;
       try {
-        final url1 = await uploadImageToStorage(image1.filePath, 'image1_${DateTime.now().millisecondsSinceEpoch}.jpg');
-        final url2 = await uploadImageToStorage(image2.filePath, 'image2_${DateTime.now().millisecondsSinceEpoch}.jpg');
+        final url1 = await uploadImageToStorage(
+          image1.filePath,
+          'image1_${DateTime.now().millisecondsSinceEpoch}.jpg',
+        );
+        final url2 = await uploadImageToStorage(
+          image2.filePath,
+          'image2_${DateTime.now().millisecondsSinceEpoch}.jpg',
+        );
         await FirebaseFirestore.instance.collection('comparison_results').add({
           'timestamp': FieldValue.serverTimestamp(),
           'image1': {
             'smiling': image1.smiling,
             'leftEyeOpen': image1.leftEyeOpenProb,
             'rightEyeOpen': image1.rightEyeOpenProb,
-            'mouthGap': getMouthGap(image1.upperLipBottom.points, image1.lowerLipTop.points, image1),
-            'eyebrowGap': getEyebrowGap(image1.leftEyebrowTop.points, image1.rightEyebrowTop.points, image1),
-            'url': url1
+            'mouthGap': getMouthGap(
+              image1.upperLipBottom.points,
+              image1.lowerLipTop.points,
+              image1,
+            ),
+            'eyebrowGap': getEyebrowGap(
+              image1.leftEyebrowTop.points,
+              image1.rightEyebrowTop.points,
+              image1,
+            ),
+            'url': url1,
           },
           'image2': {
             'smiling': image2.smiling,
             'leftEyeOpen': image2.leftEyeOpenProb,
             'rightEyeOpen': image2.rightEyeOpenProb,
-            'mouthGap': getMouthGap(image2.upperLipBottom.points, image2.lowerLipTop.points, image2),
-            'eyebrowGap': getEyebrowGap(image2.leftEyebrowTop.points, image2.rightEyebrowTop.points, image2),
-            'url': url2
+            'mouthGap': getMouthGap(
+              image2.upperLipBottom.points,
+              image2.lowerLipTop.points,
+              image2,
+            ),
+            'eyebrowGap': getEyebrowGap(
+              image2.leftEyebrowTop.points,
+              image2.rightEyebrowTop.points,
+              image2,
+            ),
+            'url': url2,
           },
           'uid': user.uid,
           'isAnonymous': user.isAnonymous,
@@ -127,78 +154,75 @@ class ResultPage extends StatelessWidget {
           ListView(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
             children: List.generate(labels.length, (index) {
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    labels[index],
-                    style: const TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                    
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          
-                          Row(
-                            children: [
-                              Text(
-                                "Image 1",
-                                style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(width: 4),
-                             
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Text(
-                                "Image 2",
-                                style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(width: 4),
-                              
-                            ],
-                          ),
-                        ],
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      labels[index],
+                      style: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
                       ),
-                  
-                     
-                      Expanded(
-                        child: Column(
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                          
-                            TweenAnimationBuilder<double>(
-                              tween: Tween(begin: 0, end: values1[index].clamp(0.0, 1.0)),
-                              duration: const Duration(milliseconds: 800),
-                              builder: (context, value, _) {
-                                final color = Color.lerp(Colors.red, Colors.green, value);
-                                return Stack(
-                                  children: [
-                                    Container(
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    FractionallySizedBox(
-                                      widthFactor: value,
-                                      child: Container(
+                            Row(
+                              children: [
+                                Text(
+                                  "Image 1",
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Text(
+                                  "Image 2",
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                              ],
+                            ),
+                          ],
+                        ),
 
-            
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TweenAnimationBuilder<double>(
+                                tween: Tween(
+                                  begin: 0,
+                                  end: values1[index].clamp(0.0, 1.0),
+                                ),
+                                duration: const Duration(milliseconds: 800),
+                                builder: (context, value, _) {
+                                  final color = Color.lerp(
+                                    Colors.red,
+                                    Colors.green,
+                                    value,
+                                  );
+                                  return Stack(
+                                    children: [
+                                      Container(
                                         height: 20,
                                         decoration: BoxDecoration(
                                           color: Colors.grey[300],
@@ -207,27 +231,6 @@ class ResultPage extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                            const SizedBox(height: 4),
-                           
-                            TweenAnimationBuilder<double>(
-                              tween: Tween(begin: 0, end: values2[index].clamp(0.0, 1.0)),
-                              duration: const Duration(milliseconds: 800),
-                              builder: (context, value, _) {
-                                final color = Color.lerp(Colors.red, Colors.green, value);
-                                return Stack(
-                                  children: [
-                                    Container(
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(10),
-
                                       FractionallySizedBox(
                                         widthFactor: value,
                                         child: Container(
@@ -239,14 +242,13 @@ class ResultPage extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-
                                       ),
                                     ],
                                   );
                                 },
                               ),
                               const SizedBox(height: 4),
-                              // image2 bar
+
                               TweenAnimationBuilder<double>(
                                 tween: Tween(
                                   begin: 0,
@@ -270,39 +272,21 @@ class ResultPage extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                  
-                      const SizedBox(width: 12),
-                  
-                      
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "${(values1[index] * 100).toStringAsFixed(0)}%",
-                                style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(width: 4),
-                             
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Text(
-                                "${(values2[index] * 100).toStringAsFixed(0)}%",
-                                style: const TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold),
-
+                                      FractionallySizedBox(
+                                        widthFactor: value,
+                                        child: Container(
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                            color: color,
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -310,7 +294,6 @@ class ResultPage extends StatelessWidget {
 
                         const SizedBox(width: 12),
 
-                        // 오른쪽 퍼센트 + 아이콘
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -366,7 +349,10 @@ class ResultPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 30),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 14,
+                      horizontal: 30,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
@@ -381,7 +367,10 @@ class ResultPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 0, 102, 204),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 32,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
