@@ -15,10 +15,9 @@ class ResultPage extends StatefulWidget {
 }
 
 class _ResultPageState extends State<ResultPage> {
-
   final titleController = TextEditingController();
   @override
-  void dispose(){
+  void dispose() {
     titleController.dispose();
     super.dispose();
   }
@@ -155,23 +154,25 @@ class _ResultPageState extends State<ResultPage> {
           'isAnonymous': user.isAnonymous,
           'created': FieldValue.serverTimestamp(),
           'modified': FieldValue.serverTimestamp(),
-          'title':titleController.text.trim(),
+          'title':
+              titleController.text.trim().isNotEmpty
+                  ? titleController.text.trim()
+                  : 'Sync Your Snap',
         });
       } catch (e) {
         debugPrint("Firestore save error: $e");
       }
     }
-    
+
     return Scaffold(
-      
       appBar: AppBar(
         title: const Text('Comparison Result'),
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
@@ -186,8 +187,11 @@ class _ResultPageState extends State<ResultPage> {
           ListView(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
             children: [
-               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 12,
+                ),
                 child: TextField(
                   controller: titleController,
                   style: const TextStyle(fontSize: 18),
@@ -205,230 +209,252 @@ class _ResultPageState extends State<ResultPage> {
                 ),
               ),
               ...List.generate(labels.length, (index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      labels[index],
-                      style: const TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  "Image 1",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text(
-                                  "Image 2",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(width: 4),
-                              ],
-                            ),
-                          ],
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        labels[index],
+                        style: const TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
                         ),
-
-                        Expanded(
-                          child: Column(
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              TweenAnimationBuilder<double>(
-                                tween: Tween(
-                                  begin: 0,
-                                  end: values1[index].clamp(0.0, 1.0),
-                                ),
-                                duration: const Duration(milliseconds: 800),
-                                builder: (context, value, _) {
-                                  final color = Color.lerp(
-                                    Colors.red,
-                                    Colors.green,
-                                    value,
-                                  );
-                                  return Stack(
-                                    children: [
-                                      Container(
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[300],
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                        ),
-                                      ),
-                                      FractionallySizedBox(
-                                        widthFactor: value,
-                                        child: Container(
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                            color: color,
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
+                              Row(
+                                children: [
+                                  Text(
+                                    "Image 1",
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                ],
                               ),
                               const SizedBox(height: 4),
-
-                              TweenAnimationBuilder<double>(
-                                tween: Tween(
-                                  begin: 0,
-                                  end: values2[index].clamp(0.0, 1.0),
-                                ),
-                                duration: const Duration(milliseconds: 800),
-                                builder: (context, value, _) {
-                                  final color = Color.lerp(
-                                    Colors.red,
-                                    Colors.green,
-                                    value,
-                                  );
-                                  return Stack(
-                                    children: [
-                                      Container(
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[300],
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                        ),
-                                      ),
-                                      FractionallySizedBox(
-                                        widthFactor: value,
-                                        child: Container(
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                            color: color,
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
+                              Row(
+                                children: [
+                                  Text(
+                                    "Image 2",
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                ],
                               ),
                             ],
                           ),
-                        ),
 
-                        const SizedBox(width: 12),
-
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "${(values1[index] * 100).toStringAsFixed(0)}%",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                                TweenAnimationBuilder<double>(
+                                  tween: Tween(
+                                    begin: 0,
+                                    end: values1[index].clamp(0.0, 1.0),
                                   ),
+                                  duration: const Duration(milliseconds: 800),
+                                  builder: (context, value, _) {
+                                    final color = Color.lerp(
+                                      Colors.red,
+                                      Colors.green,
+                                      value,
+                                    );
+                                    return Stack(
+                                      children: [
+                                        Container(
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                        FractionallySizedBox(
+                                          widthFactor: value,
+                                          child: Container(
+                                            height: 20,
+                                            decoration: BoxDecoration(
+                                              color: color,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 ),
-                                const SizedBox(width: 4),
+                                const SizedBox(height: 4),
+
+                                TweenAnimationBuilder<double>(
+                                  tween: Tween(
+                                    begin: 0,
+                                    end: values2[index].clamp(0.0, 1.0),
+                                  ),
+                                  duration: const Duration(milliseconds: 800),
+                                  builder: (context, value, _) {
+                                    final color = Color.lerp(
+                                      Colors.red,
+                                      Colors.green,
+                                      value,
+                                    );
+                                    return Stack(
+                                      children: [
+                                        Container(
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                        FractionallySizedBox(
+                                          widthFactor: value,
+                                          child: Container(
+                                            height: 20,
+                                            decoration: BoxDecoration(
+                                              color: color,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
                               ],
                             ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text(
-                                  "${(values2[index] * 100).toStringAsFixed(0)}%",
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
+                          ),
+
+                          const SizedBox(width: 12),
+
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    "${(values1[index] * 100).toStringAsFixed(0)}%",
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 4),
-                              ],
+                                  const SizedBox(width: 4),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Text(
+                                    "${(values2[index] * 100).toStringAsFixed(0)}%",
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ],
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  final shouldSave = await showDialog<bool>(
+                    context: context,
+                    builder:
+                        (context) => AlertDialog(
+                          title: const Text('결과 저장'),
+                          content: const Text('Firestore에 저장하시겠습니까?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text('아니오'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: const Text('네'),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            }),]
-          ),
+                  );
 
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
+                  if (shouldSave == true) {
+                    // 저장 중 로딩창 띄우기
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false, // 사용자가 백키로 닫지 못하게
+                      builder:
+                          (context) => const AlertDialog(
+                            content: Row(
+                              children: [
+                                CircularProgressIndicator(),
+                                SizedBox(width: 20),
+                                Text("저장 중입니다..."),
+                              ],
+                            ),
+                          ),
+                    );
+
+                    // 저장 실행
                     await saveResultToFirestore(image1, image2);
+
+                    // 로딩창 닫기
+                    Navigator.pop(context);
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Saved to Firestore!')),
                     );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 14,
-                      horizontal: 30,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
+                  }
+
+                  Navigator.pushReplacementNamed(context, '/home');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 0, 102, 204),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 32,
                   ),
-                  child: const Text('Save Result'),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 0, 102, 204),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 16,
-                      horizontal: 32,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                  child: const Text('Go to home.dart'),
                 ),
-              ],
+                child: const Text('Go to home.dart'),
+              ),
             ),
           ),
         ],
