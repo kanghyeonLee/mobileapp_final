@@ -1,9 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'model/imageobj.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 class ResultPage extends StatelessWidget {
   const ResultPage({Key? key}) : super(key: key);
@@ -31,14 +29,11 @@ class ResultPage extends StatelessWidget {
 
       return browGap / faceHeight;
     }
-    final shadowColor = const Color(0xFFCCCCCC);
     
-    int touchedGroupIndex = -1;
-    int rotationTurns = 1;
+  
     final args = ModalRoute.of(context)!.settings.arguments as Map;
     final ImageObj image1 = args['image1'];
     final ImageObj image2 = args['image2'];
-    final diffsmiling = (image1.smiling - image2.smiling).abs();
     final upperLipBottom1 = image1.upperLipBottom.points;
     final lowerLipTop1 = image1.lowerLipTop.points;
     final upperLipBottom2 = image2.upperLipBottom.points;
@@ -100,7 +95,7 @@ class ResultPage extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 왼쪽 라벨
+                    
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -129,12 +124,12 @@ class ResultPage extends StatelessWidget {
                         ],
                       ),
                   
-                      // 중앙: 애니메이션 바
+                     
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // image1 bar
+                          
                             TweenAnimationBuilder<double>(
                               tween: Tween(begin: 0, end: values1[index].clamp(0.0, 1.0)),
                               duration: const Duration(milliseconds: 800),
@@ -164,7 +159,7 @@ class ResultPage extends StatelessWidget {
                               },
                             ),
                             const SizedBox(height: 4),
-                            // image2 bar
+                           
                             TweenAnimationBuilder<double>(
                               tween: Tween(begin: 0, end: values2[index].clamp(0.0, 1.0)),
                               duration: const Duration(milliseconds: 800),
@@ -199,7 +194,7 @@ class ResultPage extends StatelessWidget {
                   
                       const SizedBox(width: 12),
                   
-                      // 오른쪽 퍼센트 + 아이콘
+                      
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
