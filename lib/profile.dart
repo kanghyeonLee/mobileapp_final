@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -44,6 +45,42 @@ class ProfilePage extends StatelessWidget {
     }
   }
 
+  Future<void> logoutAndCleanupIfAnonymous() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null && user.isAnonymous) {
+      final uid = user.uid;
+
+      // 1. comparison_results 컬렉션에서 uid 일치하는 문서 삭제
+      final compDocs =
+          await FirebaseFirestore.instance
+              .collection('comparison_results')
+              .where('uid', isEqualTo: uid)
+              .get();
+
+      for (var doc in compDocs.docs) {
+        await doc.reference.delete();
+      }
+
+      // 2. users 컬렉션에서 uid 일치하는 문서 삭제
+      final userDocs =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .where('uid', isEqualTo: uid)
+              .get();
+
+      for (var doc in userDocs.docs) {
+        await doc.reference.delete();
+      }
+
+      // 3. Firebase 인증 로그아웃
+      await FirebaseAuth.instance.signOut();
+    } else {
+      // 일반 사용자면 그냥 로그아웃만
+      await FirebaseAuth.instance.signOut();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
@@ -55,11 +92,11 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Profile'),
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/');
-            },
-          ),
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/');
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -100,7 +137,11 @@ class ProfilePage extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () => _signOut(context),
+                onPressed: () async {
+                  await logoutAndCleanupIfAnonymous();
+                  await _signOut(context);
+                  Navigator.pushReplacementNamed(context, '/login');
+                },
                 icon: const Icon(Icons.logout),
                 label: const Text('로그아웃'),
                 style: ElevatedButton.styleFrom(
