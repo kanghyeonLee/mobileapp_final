@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobileapp_final/camera_capture.dart';
 import 'package:mobileapp_final/home.dart';
 import 'package:mobileapp_final/image.dart';
 import 'package:mobileapp_final/profile.dart';
@@ -20,6 +21,7 @@ class SyncYourSnapApp extends StatelessWidget {
         '/result': (BuildContext context) => const ResultPage(),
         '/home': (BuildContext context) => const HomePage(),
         '/profile': (BuildContext context) => const ProfilePage(),
+        '/camera':(BuildContext context) => const CameraCapturePage(),
       },
 
       theme: ThemeData(
