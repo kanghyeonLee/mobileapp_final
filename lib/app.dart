@@ -31,6 +31,7 @@ class SyncYourSnapApp extends StatelessWidget {
           foregroundColor: Colors.white,
           backgroundColor: Color.fromARGB(255, 12, 63, 151),
         ),
+        scaffoldBackgroundColor: Color.fromARGB(0, 14, 12, 34),
       ),
     );
   }
