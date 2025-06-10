@@ -29,9 +29,12 @@ class SyncYourSnapApp extends StatelessWidget {
         appBarTheme: const AppBarTheme(
           centerTitle: true,
           foregroundColor: Colors.white,
-          backgroundColor: Color.fromARGB(255, 12, 63, 151),
+          backgroundColor: Color.fromARGB(255, 166, 218, 244),
+          titleTextStyle: TextStyle(
+            fontFamily: 'Rock_Salt'
+          )
         ),
-        scaffoldBackgroundColor: Color.fromARGB(0, 14, 12, 34),
+      
       ),
     );
   }
