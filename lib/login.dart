@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
     );
     if (userCredential.user != null) {
       await saveUserInfo(userCredential.user!); // 추가
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.pushReplacementNamed(context, '/home');
     }
 
     return await FirebaseAuth.instance.signInWithCredential(credential);
@@ -35,9 +35,8 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<UserCredential> signInAnonymous() async {
     final userCredential = await FirebaseAuth.instance.signInAnonymously();
-    print("Signed in with temporary account.");
     await saveUserInfo(userCredential.user!); // 추가
-    Navigator.pushReplacementNamed(context, '/');
+    Navigator.pushReplacementNamed(context, '/home');
     return userCredential;
   }
 
@@ -103,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                     final userCredential = await signInWithGoogle();
                     if (userCredential.user != null) {
                       await saveUserInfo(userCredential.user!);
-                      Navigator.pushReplacementNamed(context, '/');
+                      Navigator.pushReplacementNamed(context, '/home');
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('로그인이 취소되었습니다.')),
@@ -113,7 +112,6 @@ class _LoginPageState extends State<LoginPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('로그인 중 오류가 발생했습니다.')),
                     );
-                    print('\n\n@@@@@@@@@@@@@@Login failed: $e\n\n');
                   }
                 },
                 icon: const Icon(Icons.g_mobiledata, color: Colors.white),

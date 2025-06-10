@@ -88,7 +88,7 @@ class ProfilePage extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, '/');
+            Navigator.pushReplacementNamed(context, '/home');
           },
         ),
       ),
@@ -133,7 +133,6 @@ class ProfilePage extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () async {
                   await _signOut(context);
-                  //Navigator.pushReplacementNamed(context, '/login');
                 },
                 icon: const Icon(Icons.logout),
                 label: const Text('로그아웃'),
