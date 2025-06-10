@@ -66,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Colors.white, // 원하는 색
+      backgroundColor: Color.fromARGB(255, 166, 218, 244),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -75,6 +75,11 @@ class _LoginPageState extends State<LoginPage> {
             Column(
               children: <Widget>[
                 const SizedBox(height: 16.0),
+                Image.asset(
+                    'assets/logo.png',
+                    width: 200,
+                    height: 200,  
+                  ),
                 Text(
                   'Sync Your Snap',
                   style: TextStyle(
