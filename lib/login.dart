@@ -78,9 +78,10 @@ class _LoginPageState extends State<LoginPage> {
                 Text(
                   'Sync Your Snap',
                   style: TextStyle(
-                    fontSize: 36,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 12, 63, 151),
+                    fontFamily:'Rock_Salt',
+                    color: Colors.white,
                     letterSpacing: 1.5,
                     shadows: [
                       Shadow(
