@@ -165,7 +165,10 @@ class _ResultPageState extends State<ResultPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Sync Your Snap')),
+      appBar: AppBar(
+        title: const Text('Sync Your Snap'),
+        backgroundColor: Color(0xFFA6DAF4),
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -179,28 +182,28 @@ class _ResultPageState extends State<ResultPage> {
             ),
             ListTile(
               leading: const Icon(Icons.home),
-              title: const Text('홈'),
+              title: const Text('Home'),
               onTap: () {
                 Navigator.pushReplacementNamed(context, '/home');
               },
             ),
             ListTile(
               leading: const Icon(Icons.person),
-              title: const Text('프로필'),
+              title: const Text('Profile'),
               onTap: () {
                 Navigator.pushReplacementNamed(context, '/profile');
               },
             ),
             ListTile(
               leading: const Icon(Icons.camera_alt),
-              title: const Text('연습하기'),
+              title: const Text('Practice'),
               onTap: () {
                 Navigator.pushReplacementNamed(context, '/image');
               },
             ),
             ListTile(
               leading: const Icon(Icons.list),
-              title: const Text('목록'),
+              title: const Text('List'),
               onTap: () {
                 Navigator.pushReplacementNamed(context, '/list');
               },
