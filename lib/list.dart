@@ -13,14 +13,13 @@ class ListPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sync Your Snap'),
-        backgroundColor: Color(0xFFA6DAF4),
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
+              decoration: BoxDecoration(color: Color.fromARGB(255, 166, 218, 244)),
               child: Text(
                 'Menu',
                 style: TextStyle(color: Colors.white, fontSize: 24),
@@ -147,8 +146,7 @@ class ListPage extends StatelessWidget {
                                   const SizedBox(width: 16),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           title,
@@ -163,6 +161,16 @@ class ListPage extends StatelessWidget {
                                           createdStr,
                                           style: const TextStyle(
                                             color: Colors.grey,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: TextButton(
+                                            onPressed: () {
+                                              Navigator.pushNamed(context, '/detail', arguments: data);
+                                            },
+                                            child: const Text('More'),
                                           ),
                                         ),
                                       ],

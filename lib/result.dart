@@ -167,14 +167,13 @@ class _ResultPageState extends State<ResultPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sync Your Snap'),
-        backgroundColor: Color(0xFFA6DAF4),
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
+              decoration: BoxDecoration(color: Color.fromARGB(255, 166, 218, 244)),
               child: Text(
                 '메뉴',
                 style: TextStyle(color: Colors.white, fontSize: 24),

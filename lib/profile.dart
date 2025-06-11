@@ -79,20 +79,48 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
     final isAnonymous = user?.isAnonymous ?? true;
-    final displayName = isAnonymous ? 'Guest' : (user?.displayName ?? 'User');
-    final profileImage = isAnonymous ? null : user?.photoURL;
+
+    String loginMethod = 'Unknown';
+    String displayName = 'User';
+    String? profileImage;
+
+    if (user != null) {
+      final providerId = user.providerData.isNotEmpty
+          ? user.providerData[0].providerId
+          : (isAnonymous ? 'anonymous' : 'unknown');
+
+      switch (providerId) {
+        case 'google.com':
+          loginMethod = 'Google Login';
+          displayName = user.displayName ?? 'Google User';
+          profileImage = user.photoURL;
+          break;
+        case 'password':
+          loginMethod = 'Email Login';
+          displayName = user.email ?? 'Email User';
+          profileImage = null;
+          break;
+        case 'anonymous':
+          loginMethod = 'Guest Login';
+          displayName = 'Guest';
+          profileImage = null;
+          break;
+        default:
+          loginMethod = 'Unknown';
+          break;
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sync Your Snap'),
-        backgroundColor: Color(0xFFA6DAF4),
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
+              decoration: BoxDecoration(color: Color.fromARGB(255, 166, 218, 244)),
               child: Text(
                 'Menu',
                 style: TextStyle(color: Colors.white, fontSize: 24),
@@ -138,11 +166,9 @@ class ProfilePage extends StatelessWidget {
             // 프로필 이미지
             CircleAvatar(
               radius: 50,
-              backgroundImage:
-                  profileImage != null
-                      ? NetworkImage(profileImage)
-                      : const AssetImage('assets/default_profile.png')
-                          as ImageProvider,
+              backgroundImage: profileImage != null
+                  ? NetworkImage(profileImage)
+                  : const AssetImage('assets/default_profile.png') as ImageProvider,
               backgroundColor: Colors.grey[300],
             ),
 
@@ -158,7 +184,7 @@ class ProfilePage extends StatelessWidget {
 
             // 로그인 방식
             Text(
-              isAnonymous ? 'Guest Login' : 'Google Login',
+              loginMethod,
               style: TextStyle(color: Colors.grey[700], fontSize: 16),
             ),
 
