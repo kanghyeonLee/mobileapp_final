@@ -47,6 +47,7 @@ dependencies:
   cross_file_image: ^1.1.0
   firebase_core: ^3.13.1
   fl_chart: ^1.0.0
+  carousel_slider: ^5.1.1
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +75,11 @@ flutter:
   assets:
     - assets/default_profile.png
     - assets/logo.png
+    - assets/google.png
+    - assets/image1.png
+    - assets/image2.jpg
+    - assets/image3.jpeg
+    - assets/image4.png
   
   #   - images/a_dot_ham.jpeg
 

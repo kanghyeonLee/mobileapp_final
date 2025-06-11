@@ -1,24 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final List<String> imagePaths = [
+      'assets/image1.png',
+      'assets/image2.jpg',
+      'assets/image3.jpeg',
+      'assets/image4.png',
+    ];
+    final _carouselController = CarouselController();
+    int _currentIndex = 0;
+
+    void onComparePressed() {
+      final selectedImage = imagePaths[_currentIndex];
+      Navigator.pushNamed(
+        context,
+        '/image',
+        arguments: selectedImage, // 전달
+      );
+    }
+
+    void onSkipPressed() {
+      Navigator.pushNamed(context, '/image');
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sync Your Snap'),
-        backgroundColor: Color(0xFFA6DAF4),
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
+              decoration: BoxDecoration(color: Color.fromARGB(255, 166, 218, 244)),
               child: Text(
                 'Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+                style: TextStyle(color: Colors.white, fontSize: 24, fontFamily: 'Rock_Salt'),
               ),
             ),
             ListTile(
@@ -52,11 +74,56 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      body: const Center(
-        child: Text(
-          'Welcome to Sync Your Snap!',
-          style: TextStyle(fontSize: 20),
-        ),
+      body: Column(
+        children: [
+          const SizedBox(height: 180,),
+          const Text('지금 당장 여러분의 표정을 이 이미지들과 sync해보세요!'),
+          const SizedBox(height: 30,),
+          CarouselSlider(
+            options: CarouselOptions(
+              height: 300.0,
+              autoPlay: true,
+              autoPlayInterval: const Duration(seconds: 3),
+              enlargeCenterPage: true,
+              viewportFraction: 0.8,
+              aspectRatio: 16 / 9,
+            ),
+            items: imagePaths.map((path) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(path, fit: BoxFit.cover, width: double.infinity),
+                  );
+                },
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 40),
+          Column(
+            children: [
+              ElevatedButton(
+                onPressed: onComparePressed,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue[300],
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text('이 이미지로 얼굴 비교하기'),
+              ),
+              const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: onSkipPressed,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[400],
+                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  child: const Text('그냥 테스트'),
+                ),
+              ],
+            )
+        ],
       ),
     );
   }

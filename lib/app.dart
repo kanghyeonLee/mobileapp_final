@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mobileapp_final/camera_capture.dart';
+import 'package:mobileapp_final/detail.dart';
+import 'package:mobileapp_final/forgot_password.dart';
 import 'package:mobileapp_final/home.dart';
 import 'package:mobileapp_final/list.dart';
 import 'package:mobileapp_final/image.dart';
 import 'package:mobileapp_final/profile.dart';
 import 'package:mobileapp_final/result.dart';
+import 'package:mobileapp_final/signup.dart';
 import 'login.dart';
 
 class SyncYourSnapApp extends StatelessWidget {
@@ -23,6 +26,9 @@ class SyncYourSnapApp extends StatelessWidget {
         '/profile': (BuildContext context) => const ProfilePage(),
         '/camera': (BuildContext context) => const CameraCapturePage(),
         '/home': (BuildContext context) => const HomePage(),
+        '/signup': (BuildContext context) => const SignUpPage(),
+        '/forgot-password':(BuildContext context) => const ForgotPasswordPage(),
+        '/detail': (BuildContext context) => const DetailPage(),
       },
 
       theme: ThemeData(
@@ -34,7 +40,7 @@ class SyncYourSnapApp extends StatelessWidget {
             fontFamily: 'Rock_Salt'
           )
         ),
-      
+        
       ),
     );
   }

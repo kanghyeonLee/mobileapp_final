@@ -5,6 +5,9 @@ import 'package:cross_file_image/cross_file_image.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import '../model/imageobj.dart';
 import 'camera_capture.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart';
 
 class ImagePage extends StatefulWidget {
   const ImagePage({super.key});
@@ -21,11 +24,38 @@ class _ImagePageState extends State<ImagePage> {
   );
 
   ImageObj? image1, image2;
-
   @override
   void dispose() {
     _faceDetector.close();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final args = ModalRoute.of(context)?.settings.arguments;
+
+    if (args is String && image1 == null) {
+      // args는 'assets/image1.png' 같은 경로
+      _loadAssetImage(args).then((file) async {
+        final result = await _analyze(XFile(file.path));
+        if (result != null) {
+          setState(() {
+            image1 = result;
+          });
+        }
+      });
+    }
+  }
+
+  /// Copies asset image to a temporary file and returns it.
+  Future<File> _loadAssetImage(String assetPath) async {
+    final byteData = await rootBundle.load(assetPath);
+    final tempDir = await getTemporaryDirectory();
+    final file = File('${tempDir.path}/${assetPath.split('/').last}');
+    await file.writeAsBytes(byteData.buffer.asUint8List());
+    return file;
   }
 
   Future<ImageObj?> _analyze(XFile file) async {
@@ -152,17 +182,17 @@ class _ImagePageState extends State<ImagePage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sync Your Snap'),
-        backgroundColor: Color(0xFFA6DAF4),
       ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
+              decoration: BoxDecoration(color: Color.fromARGB(255, 166, 218, 244)),
               child: Text(
                 'Menu',
                 style: TextStyle(color: Colors.white, fontSize: 24),
@@ -202,8 +232,8 @@ class _ImagePageState extends State<ImagePage> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _buildSlot("Image 1", image1, 1),
-          _buildSlot("Image 2", image2, 2),
+          _buildSlot("따라할 이미지", image1, 1),
+          _buildSlot("나의 이미지", image2, 2),
           ElevatedButton(
             onPressed:
                 image1 != null && image2 != null

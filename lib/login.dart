@@ -64,98 +64,224 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 166, 218, 244),
-      body: SafeArea(
+Widget build(BuildContext context) {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  return Scaffold(
+    backgroundColor: Color.fromARGB(255, 166, 218, 244),
+    body: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          children: <Widget>[
-            const SizedBox(height: 80.0),
+          children: [
+            const SizedBox(height: 60),
             Column(
-              children: <Widget>[
-                const SizedBox(height: 16.0),
+              children: [
                 Image.asset(
-                    'assets/logo.png',
-                    width: 200,
-                    height: 200,  
-                  ),
-                Text(
+                  'assets/logo.png',
+                  width: 120,
+                  height: 120,
+                ),
+                const SizedBox(height: 16),
+                const Text(
                   'Sync Your Snap',
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    fontFamily:'Rock_Salt',
                     color: Colors.white,
-                    letterSpacing: 1.5,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 4.0,
-                        color: Colors.black26,
-                        offset: Offset(2, 2),
-                      ),
-                    ],
+                    fontFamily: 'Rock_Salt',
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 120.0),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  try {
-                    final userCredential = await signInWithGoogle();
-                    if (userCredential.user != null) {
-                      await saveUserInfo(userCredential.user!);
-                      Navigator.pushReplacementNamed(context, '/home');
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('로그인이 취소되었습니다.')),
-                      );
-                    }
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('로그인 중 오류가 발생했습니다.')),
-                    );
-                  }
-                },
-                icon: const Icon(Icons.g_mobiledata, color: Colors.white),
-                label: const Text("GOOGLE"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[300],
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+            const SizedBox(height: 60),
+
+            // Email
+            TextField(
+              controller: emailController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Email',
+                labelStyle: const TextStyle(color: Colors.white54),
+                hintText: 'Example@email.com',
+                hintStyle: const TextStyle(color: Colors.white70),
+                filled: true,
+                fillColor: Colors.white10,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.white, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.white, width: 1.5),
                 ),
               ),
             ),
             const SizedBox(height: 16),
 
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  signInAnonymous();
-                },
-                icon: const Icon(Icons.question_mark, color: Colors.black),
-                label: const Text("GUEST"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[300],
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+            // Password
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: 'Password',
+                labelStyle: const TextStyle(color: Colors.white54),
+                hintText: 'At least 8 characters',
+                hintStyle: const TextStyle(color: Colors.white70),
+                filled: true,
+                fillColor: Colors.white10,
+                enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.white, width: 1),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.white, width: 1.5),
                 ),
               ),
             ),
+
+            // Forgot Password
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/forgot-password');
+                },
+                child: const Text('Forgot Password?', style: TextStyle(color: Colors.blue)),
+              ),
+            ),
+
+            // Sign in 버튼
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  final email = emailController.text.trim();
+                  final password = passwordController.text;
+
+                  try {
+                    final userCredential = await FirebaseAuth.instance
+                        .signInWithEmailAndPassword(email: email, password: password);
+
+                    if (userCredential.user != null) {
+                      await saveUserInfo(userCredential.user!);
+                      Navigator.pushReplacementNamed(context, '/home');
+                    }
+                  } on FirebaseAuthException catch (e) {
+                    String message;
+                    if (e.code == 'user-not-found') {
+                      message = 'No user found for that email.';
+                    } else if (e.code == 'wrong-password') {
+                      message = 'Wrong password provided.';
+                    } else {
+                      message = 'Login failed: ${e.message}';
+                    }
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(message)),
+                    );
+                  }
+                },
+                child: const Text('Sign in', style: TextStyle(color: Colors.black),),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+            ),
+
             const SizedBox(height: 16),
+            Row(
+              children: const [
+                Expanded(child: Divider(color: Colors.white30)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text('Or sign in with', style: TextStyle(color: Colors.white70)),
+                ),
+                Expanded(child: Divider(color: Colors.white30)),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Google 로그인 버튼
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 170,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        final userCredential = await signInWithGoogle();
+                        if (userCredential.user != null) {
+                          await saveUserInfo(userCredential.user!);
+                          Navigator.pushReplacementNamed(context, '/home');
+                        }
+                      } catch (_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Google login failed')),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/google.png'),
+                        const Text('Google')
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                
+                // Guest 로그인 버튼
+                SizedBox(
+                  width: 170,
+                  height: 50,
+                  child: ElevatedButton.icon(
+                    onPressed: () => signInAnonymous(),
+                    icon: const Icon(Icons.person_outline, color: Colors.black),
+                    label: const Text('Guest'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[300],
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
+            ),
+
+            // 회원가입 링크
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Don't have an account?", style: TextStyle(color: Colors.white70)),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/signup');
+                  },
+                  child: const Text('Sign up', style: TextStyle(color: Colors.blue),),
+                ),
+              ],
+            ),
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
