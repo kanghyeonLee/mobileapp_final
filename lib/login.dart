@@ -227,15 +227,15 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 16),
               Row(
                 children: const [
-                  Expanded(child: Divider(color: Colors.white30)),
+                  Expanded(child: Divider(color: Colors.white)),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       'Or sign in with',
-                      style: TextStyle(color: Colors.white70),
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
-                  Expanded(child: Divider(color: Colors.white30)),
+                  Expanded(child: Divider(color: Colors.white)),
                 ],
               ),
               const SizedBox(height: 16),
@@ -294,7 +294,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       label: const Text('Guest'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[300],
+                        backgroundColor: Colors.white,
                         foregroundColor: Colors.black,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
