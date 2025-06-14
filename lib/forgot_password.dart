@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({Key? key}) : super(key: key);
+  const ForgotPasswordPage({super.key});
 
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
@@ -27,9 +27,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       } else {
         message = 'Failed to send reset email: ${e.message}';
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(message)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
@@ -80,9 +80,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: const Text('Send Reset Link', style: TextStyle(color: Colors.black)),
+                child: const Text(
+                  'Send Reset Link',
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ),
           ],
