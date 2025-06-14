@@ -101,61 +101,66 @@ class _ImagePageState extends State<ImagePage> {
     );
   }
 
-
   void _showSourceSelect(int imageNum) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("이미지 선택"),
-        content: const Text("어디서 이미지를 가져올까요?"),
-        actions: [
-          TextButton.icon(
-            icon: const Icon(Icons.photo),
-            label: const Text("갤러리"),
-            onPressed: () async {
-              Navigator.pop(context); // 다이얼로그 닫기
-              final picked = await ImagePicker().pickImage(
-                source: ImageSource.gallery,
-              );
-              if (picked != null) {
-                final result = await _analyze(picked);
-                if (result != null) {
-                  setState(() {
-                    if (imageNum == 1)
-                      image1 = result;
-                    else
-                      image2 = result;
-                  });
-                }
-              }
-            },
-          ),
-          TextButton.icon(
-            icon: const Icon(Icons.camera_alt),
-            label: const Text("카메라"),
-            onPressed: () async {
-              Navigator.pop(context); // 다이얼로그 닫기
-              final file = await Navigator.push<XFile?>(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const CameraCapturePage(),
-                ),
-              );
-              if (file != null) {
-                final result = await _analyze(file);
-                if (result != null) {
-                  setState(() {
-                    if (imageNum == 1)
-                      image1 = result;
-                    else
-                      image2 = result;
-                  });
-                }
-              }
-            },
-          ),
-        ],
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
+      builder:
+          (context) => SafeArea(
+            child: Wrap(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.photo),
+                  title: const Text("갤러리"),
+                  onTap: () async {
+                    Navigator.pop(context);
+                    final picked = await ImagePicker().pickImage(
+                      source: ImageSource.gallery,
+                    );
+                    if (picked != null) {
+                      final result = await _analyze(picked);
+                      if (result != null) {
+                        setState(() {
+                          if (imageNum == 1)
+                            image1 = result;
+                          else
+                            image2 = result;
+                        });
+                      }
+                    }
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.camera_alt),
+                  title: const Text("카메라"),
+                  onTap: () async {
+                    Navigator.pop(context);
+                    final file = await Navigator.push<XFile?>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const CameraCapturePage(),
+                      ),
+                    );
+                    if (file != null) {
+                      final result = await _analyze(file);
+                      if (result != null) {
+                        setState(() {
+                          if (imageNum == 1)
+                            image1 = result;
+                          else
+                            image2 = result;
+                        });
+                      }
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
     );
   }
 
