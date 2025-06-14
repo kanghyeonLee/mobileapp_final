@@ -73,7 +73,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
               children: [
                 Expanded(child: CameraPreview(_controller)),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(50.0),
                   child: ElevatedButton.icon(
                     icon: const Icon(Icons.camera),
                     label: const Text("촬영"),
