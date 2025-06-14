@@ -38,10 +38,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 166, 218, 244),
       appBar: AppBar(
-        title: const Text('Reset Password'),
         backgroundColor: const Color.fromARGB(255, 166, 218, 244),
         elevation: 0,
-        automaticallyImplyLeading: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, '/login');
+          },
+        ),
+        title: const Text('Reset Password'),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
