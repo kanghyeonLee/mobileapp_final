@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<String> imagePaths = [
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final List<String> imagePaths = [
       'assets/image1.png',
       'assets/image2.jpg',
       'assets/image3.jpeg',
@@ -28,6 +31,9 @@ class HomePage extends StatelessWidget {
       Navigator.pushNamed(context, '/image');
     }
 
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Sync Your Snap'),
@@ -87,6 +93,11 @@ class HomePage extends StatelessWidget {
               enlargeCenterPage: true,
               viewportFraction: 0.8,
               aspectRatio: 16 / 9,
+              onPageChanged: (index, reason) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
             ),
             items: imagePaths.map((path) {
               return Builder(
