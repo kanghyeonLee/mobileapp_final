@@ -242,7 +242,7 @@ class _LoginPageState extends State<LoginPage> {
 
               // Google 로그인 버튼
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
                     width: 140,
@@ -274,25 +274,24 @@ class _LoginPageState extends State<LoginPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset('assets/google.png'),
+                          Image.asset(
+                            'assets/google.png',
+                            width: 20,
+                            height: 20,
+                          ),
+                          const SizedBox(width: 8),
                           const Text('Google'),
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
-
+                  const SizedBox(width: 20),
                   // Guest 로그인 버튼
                   SizedBox(
                     width: 140,
                     height: 50,
-                    child: ElevatedButton.icon(
+                    child: ElevatedButton(
                       onPressed: () => signInAnonymous(),
-                      icon: const Icon(
-                        Icons.person_outline,
-                        color: Colors.black,
-                      ),
-                      label: const Text('Guest'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.black,
@@ -301,9 +300,16 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(Icons.person_outline, color: Colors.black),
+                          SizedBox(width: 8),
+                          Text('Guest'),
+                        ],
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 24),
                 ],
               ),
 
