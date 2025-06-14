@@ -41,6 +41,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         title: const Text('Reset Password'),
         backgroundColor: const Color.fromARGB(255, 166, 218, 244),
         elevation: 0,
+        automaticallyImplyLeading: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
