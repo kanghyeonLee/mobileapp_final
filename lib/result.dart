@@ -481,7 +481,7 @@ class _ResultPageState extends State<ResultPage> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: const Text('Go to home.dart'),
+                child: const Text('저장하기'),
               ),
             ),
           ),

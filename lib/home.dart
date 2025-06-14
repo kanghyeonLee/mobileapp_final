@@ -15,7 +15,7 @@ class _HomePageState extends State<HomePage> {
       'assets/image3.jpeg',
       'assets/image4.png',
     ];
-    final _carouselController = CarouselController();
+   
     int _currentIndex = 0;
 
     void onComparePressed() {
@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           const SizedBox(height: 180,),
-          const Text('지금 당장 여러분의 표정을 이 이미지들과 sync해보세요!'),
+          const Text('지금 당장 여러분의 표정을 이 이미지들과 sync해보세요!', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold,),textAlign: TextAlign.center,),
           const SizedBox(height: 30,),
           CarouselSlider(
             options: CarouselOptions(
@@ -111,29 +111,15 @@ class _HomePageState extends State<HomePage> {
             }).toList(),
           ),
           const SizedBox(height: 40),
-          Column(
-            children: [
-              ElevatedButton(
-                onPressed: onComparePressed,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[300],
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                child: const Text('이 이미지로 얼굴 비교하기'),
-              ),
-              const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: onSkipPressed,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[400],
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: const Text('그냥 테스트'),
-                ),
-              ],
-            )
+          ElevatedButton(
+            onPressed: onComparePressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue[300],
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: const Text('이 이미지로 비교하기'),
+          )
         ],
       ),
     );
