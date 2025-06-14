@@ -415,73 +415,76 @@ class _ResultPageState extends State<ResultPage> {
               }),
             ],
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () async {
-                  final shouldSave = await showDialog<bool>(
-                    context: context,
-                    builder:
-                        (context) => AlertDialog(
-                          title: const Text('결과 저장'),
-                          content: const Text('Firestore에 저장하시겠습니까?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, false),
-                              child: const Text('아니오'),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, true),
-                              child: const Text('네'),
-                            ),
-                          ],
-                        ),
-                  );
-
-                  if (shouldSave == true) {
-                    // 저장 중 로딩창 띄우기
-                    showDialog(
+          SafeArea(
+            minimum: const EdgeInsets.only(bottom: 16),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    final shouldSave = await showDialog<bool>(
                       context: context,
-                      barrierDismissible: false, // 사용자가 백키로 닫지 못하게
                       builder:
-                          (context) => const AlertDialog(
-                            content: Row(
-                              children: [
-                                CircularProgressIndicator(),
-                                SizedBox(width: 20),
-                                Text("저장 중입니다..."),
-                              ],
-                            ),
+                          (context) => AlertDialog(
+                            title: const Text('결과 저장'),
+                            content: const Text('Firestore에 저장하시겠습니까?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text('아니오'),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                child: const Text('네'),
+                              ),
+                            ],
                           ),
                     );
 
-                    // 저장 실행
-                    await saveResultToFirestore(image1, image2);
+                    if (shouldSave == true) {
+                      // 저장 중 로딩창 띄우기
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false, // 사용자가 백키로 닫지 못하게
+                        builder:
+                            (context) => const AlertDialog(
+                              content: Row(
+                                children: [
+                                  CircularProgressIndicator(),
+                                  SizedBox(width: 20),
+                                  Text("저장 중입니다..."),
+                                ],
+                              ),
+                            ),
+                      );
 
-                    // 로딩창 닫기
-                    Navigator.pop(context);
+                      // 저장 실행
+                      await saveResultToFirestore(image1, image2);
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Saved to Firestore!')),
-                    );
-                  }
+                      // 로딩창 닫기
+                      Navigator.pop(context);
 
-                  Navigator.pushReplacementNamed(context, '/home');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 0, 102, 204),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 32,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Saved to Firestore!')),
+                      );
+                    }
+
+                    Navigator.pushReplacementNamed(context, '/home');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 0, 102, 204),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16,
+                      horizontal: 32,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
                   ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
+                  child: const Text('저장하기'),
                 ),
-                child: const Text('저장하기'),
               ),
             ),
           ),
