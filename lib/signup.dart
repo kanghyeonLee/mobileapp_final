@@ -34,9 +34,9 @@ class _SignUpPageState extends State<SignUpPage> {
     final confirmPassword = confirmPasswordController.text;
 
     if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Passwords do not match')));
       return;
     }
 
@@ -48,9 +48,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Sign up failed: ${e.message}')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Sign up failed: ${e.message}')));
     }
   }
 
@@ -131,9 +131,14 @@ class _SignUpPageState extends State<SignUpPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              child: const Text('Create Account', style: TextStyle(color: Colors.black)),
+              child: const Text(
+                'Create Account',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         ),

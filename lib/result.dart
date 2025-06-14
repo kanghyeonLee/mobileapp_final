@@ -8,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class ResultPage extends StatefulWidget {
-  const ResultPage({Key? key}) : super(key: key);
+  const ResultPage({super.key});
 
   @override
   State<ResultPage> createState() => _ResultPageState();
@@ -165,15 +165,15 @@ class _ResultPageState extends State<ResultPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sync Your Snap'),
-      ),
+      appBar: AppBar(title: const Text('Sync Your Snap')),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Color.fromARGB(255, 166, 218, 244)),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 166, 218, 244),
+              ),
               child: Text(
                 '메뉴',
                 style: TextStyle(color: Colors.white, fontSize: 24),
