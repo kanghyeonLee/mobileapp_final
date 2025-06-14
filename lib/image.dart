@@ -59,47 +59,55 @@ class _ImagePageState extends State<ImagePage> {
   }
 
   Future<ImageObj?> _analyze(XFile file) async {
-    final inputImage = InputImage.fromFilePath(file.path);
-    final faces = await _faceDetector.processImage(inputImage);
-    if (faces.isEmpty) return null;
-
-    final face = faces.first;
-    FaceLandmark getLM(FaceLandmarkType t) =>
-        face.landmarks[t] ?? FaceLandmark(type: t, position: const Point(0, 0));
-    FaceContour getCT(FaceContourType t) =>
-        face.contours[t] ?? FaceContour(type: t, points: []);
-
-    return ImageObj(
-      filePath: file.path,
-      title: "Human",
-      image: Image(image: XFileImage(file), fit: BoxFit.contain),
-      smiling: face.smilingProbability ?? 0.0,
-      leftEyeOpenProb: face.leftEyeOpenProbability ?? 0.0,
-      rightEyeOpenProb: face.rightEyeOpenProbability ?? 0.0,
-      headTurnY: face.headEulerAngleY ?? 0.0,
-      headTiltZ: face.headEulerAngleZ ?? 0.0,
-      nose: getLM(FaceLandmarkType.noseBase),
-      leftEar: getLM(FaceLandmarkType.leftEar),
-      rightEar: getLM(FaceLandmarkType.rightEar),
-      mouthLeft: getLM(FaceLandmarkType.leftMouth),
-      mouthRight: getLM(FaceLandmarkType.rightMouth),
-      mouthBottom: getLM(FaceLandmarkType.bottomMouth),
-      face: face,
-      faceContour: getCT(FaceContourType.face),
-      leftEyebrowTop: getCT(FaceContourType.leftEyebrowTop),
-      leftEyebrowBottom: getCT(FaceContourType.leftEyebrowBottom),
-      rightEyebrowTop: getCT(FaceContourType.rightEyebrowTop),
-      rightEyebrowBottom: getCT(FaceContourType.rightEyebrowBottom),
-      leftEye: getCT(FaceContourType.leftEye),
-      rightEye: getCT(FaceContourType.rightEye),
-      upperLipTop: getCT(FaceContourType.upperLipTop),
-      upperLipBottom: getCT(FaceContourType.upperLipBottom),
-      lowerLipTop: getCT(FaceContourType.lowerLipTop),
-      lowerLipBottom: getCT(FaceContourType.lowerLipBottom),
-      noseBridge: getCT(FaceContourType.noseBridge),
-      noseBottom: getCT(FaceContourType.noseBottom),
-    );
+  final inputImage = InputImage.fromFilePath(file.path);
+  final faces = await _faceDetector.processImage(inputImage);
+  
+  if (faces.isEmpty) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("얼굴을 인식하지 못했습니다. 다른 이미지를 선택해주세요.")),
+      );
+    }
+    return null;
   }
+
+  final face = faces.first;
+  FaceLandmark getLM(FaceLandmarkType t) =>
+      face.landmarks[t] ?? FaceLandmark(type: t, position: const Point(0, 0));
+  FaceContour getCT(FaceContourType t) =>
+      face.contours[t] ?? FaceContour(type: t, points: []);
+
+  return ImageObj(
+    filePath: file.path,
+    title: "Human",
+    image: Image(image: XFileImage(file), fit: BoxFit.contain),
+    smiling: face.smilingProbability ?? 0.0,
+    leftEyeOpenProb: face.leftEyeOpenProbability ?? 0.0,
+    rightEyeOpenProb: face.rightEyeOpenProbability ?? 0.0,
+    headTurnY: face.headEulerAngleY ?? 0.0,
+    headTiltZ: face.headEulerAngleZ ?? 0.0,
+    nose: getLM(FaceLandmarkType.noseBase),
+    leftEar: getLM(FaceLandmarkType.leftEar),
+    rightEar: getLM(FaceLandmarkType.rightEar),
+    mouthLeft: getLM(FaceLandmarkType.leftMouth),
+    mouthRight: getLM(FaceLandmarkType.rightMouth),
+    mouthBottom: getLM(FaceLandmarkType.bottomMouth),
+    face: face,
+    faceContour: getCT(FaceContourType.face),
+    leftEyebrowTop: getCT(FaceContourType.leftEyebrowTop),
+    leftEyebrowBottom: getCT(FaceContourType.leftEyebrowBottom),
+    rightEyebrowTop: getCT(FaceContourType.rightEyebrowTop),
+    rightEyebrowBottom: getCT(FaceContourType.rightEyebrowBottom),
+    leftEye: getCT(FaceContourType.leftEye),
+    rightEye: getCT(FaceContourType.rightEye),
+    upperLipTop: getCT(FaceContourType.upperLipTop),
+    upperLipBottom: getCT(FaceContourType.upperLipBottom),
+    lowerLipTop: getCT(FaceContourType.lowerLipTop),
+    lowerLipBottom: getCT(FaceContourType.lowerLipBottom),
+    noseBridge: getCT(FaceContourType.noseBridge),
+    noseBottom: getCT(FaceContourType.noseBottom),
+  );
+}
 
   void _showSourceSelect(int imageNum) {
     showModalBottomSheet(
