@@ -11,7 +11,7 @@ import 'package:mobileapp_final/signup.dart';
 import 'login.dart';
 
 class SyncYourSnapApp extends StatelessWidget {
-  const SyncYourSnapApp({Key? key}) : super(key: key);
+  const SyncYourSnapApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,8 @@ class SyncYourSnapApp extends StatelessWidget {
         '/camera': (BuildContext context) => const CameraCapturePage(),
         '/home': (BuildContext context) => const HomePage(),
         '/signup': (BuildContext context) => const SignUpPage(),
-        '/forgot-password':(BuildContext context) => const ForgotPasswordPage(),
+        '/forgot-password':
+            (BuildContext context) => const ForgotPasswordPage(),
         '/detail': (BuildContext context) => const DetailPage(),
       },
 
@@ -36,11 +37,8 @@ class SyncYourSnapApp extends StatelessWidget {
           centerTitle: true,
           foregroundColor: Colors.white,
           backgroundColor: Color.fromARGB(255, 166, 218, 244),
-          titleTextStyle: TextStyle(
-            fontFamily: 'Rock_Salt'
-          )
+          titleTextStyle: TextStyle(fontFamily: 'Rock_Salt'),
         ),
-        
       ),
     );
   }

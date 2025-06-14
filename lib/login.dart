@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -210,16 +210,16 @@ class _LoginPageState extends State<LoginPage> {
                       ).showSnackBar(SnackBar(content: Text(message)));
                     }
                   },
-                  child: const Text(
-                    'Sign in',
-                    style: TextStyle(color: Colors.black),
-                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                  ),
+                  child: const Text(
+                    'Sign in',
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
               ),

@@ -182,17 +182,16 @@ class _ImagePageState extends State<ImagePage> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sync Your Snap'),
-      ),
+      appBar: AppBar(title: const Text('Sync Your Snap')),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Color.fromARGB(255, 166, 218, 244)),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 166, 218, 244),
+              ),
               child: Text(
                 'Menu',
                 style: TextStyle(color: Colors.white, fontSize: 24),

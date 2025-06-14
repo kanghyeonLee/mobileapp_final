@@ -10,43 +10,46 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<String> imagePaths = [
-      'assets/image1.png',
-      'assets/image2.jpg',
-      'assets/image3.jpeg',
-      'assets/image4.png',
-    ];
-   
-    int _currentIndex = 0;
+    'assets/image1.png',
+    'assets/image2.jpg',
+    'assets/image3.jpeg',
+    'assets/image4.png',
+  ];
 
-    void onComparePressed() {
-      final selectedImage = imagePaths[_currentIndex];
-      Navigator.pushNamed(
-        context,
-        '/image',
-        arguments: selectedImage, // 전달
-      );
-    }
+  int _currentIndex = 0;
 
-    void onSkipPressed() {
-      Navigator.pushNamed(context, '/image');
-    }
+  void onComparePressed() {
+    final selectedImage = imagePaths[_currentIndex];
+    Navigator.pushNamed(
+      context,
+      '/image',
+      arguments: selectedImage, // 전달
+    );
+  }
 
+  void onSkipPressed() {
+    Navigator.pushNamed(context, '/image');
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sync Your Snap'),
-      ),
+      appBar: AppBar(title: const Text('Sync Your Snap')),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Color.fromARGB(255, 166, 218, 244)),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 166, 218, 244),
+              ),
               child: Text(
                 'Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24, fontFamily: 'Rock_Salt'),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontFamily: 'Rock_Salt',
+                ),
               ),
             ),
             ListTile(
@@ -82,9 +85,13 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          const SizedBox(height: 180,),
-          const Text('지금 당장 여러분의 표정을 이 이미지들과 sync해보세요!', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold,),textAlign: TextAlign.center,),
-          const SizedBox(height: 30,),
+          const SizedBox(height: 180),
+          const Text(
+            '지금 당장 여러분의 표정을 이 이미지들과 sync해보세요!',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 30),
           CarouselSlider(
             options: CarouselOptions(
               height: 300.0,
@@ -94,21 +101,26 @@ class _HomePageState extends State<HomePage> {
               viewportFraction: 0.8,
               aspectRatio: 16 / 9,
               onPageChanged: (index, reason) {
-              setState(() {
-                _currentIndex = index;
-              });
-            },
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
             ),
-            items: imagePaths.map((path) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(path, fit: BoxFit.cover, width: double.infinity),
+            items:
+                imagePaths.map((path) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          path,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+                      );
+                    },
                   );
-                },
-              );
-            }).toList(),
+                }).toList(),
           ),
           const SizedBox(height: 40),
           ElevatedButton(
@@ -116,10 +128,12 @@ class _HomePageState extends State<HomePage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.blue[300],
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
             child: const Text('이 이미지로 비교하기'),
-          )
+          ),
         ],
       ),
     );

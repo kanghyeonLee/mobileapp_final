@@ -6,14 +6,16 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    final args =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
     final title = args['title'] ?? 'Untitled';
     final Timestamp? createdTs = args['created'];
     final created = createdTs?.toDate();
-    final createdStr = created != null
-        ? '${created.year}-${created.month.toString().padLeft(2, '0')}-${created.day.toString().padLeft(2, '0')} ${created.hour}:${created.minute.toString().padLeft(2, '0')}'
-        : 'Unknown date';
+    final createdStr =
+        created != null
+            ? '${created.year}-${created.month.toString().padLeft(2, '0')}-${created.day.toString().padLeft(2, '0')} ${created.hour}:${created.minute.toString().padLeft(2, '0')}'
+            : 'Unknown date';
 
     final image1 = args['image1'] as Map<String, dynamic>;
     final image2 = args['image2'] as Map<String, dynamic>;
@@ -50,18 +52,34 @@ class DetailPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
         children: [
-          Text(title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 4),
-          Text('Created at: $createdStr', style: const TextStyle(color: Colors.grey)),
+          Text(
+            'Created at: $createdStr',
+            style: const TextStyle(color: Colors.grey),
+          ),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               image1Url != ''
-                  ? Image.network(image1Url, width: 120, height: 120, fit: BoxFit.cover)
+                  ? Image.network(
+                    image1Url,
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  )
                   : const Icon(Icons.image, size: 100),
               image2Url != ''
-                  ? Image.network(image2Url, width: 120, height: 120, fit: BoxFit.cover)
+                  ? Image.network(
+                    image2Url,
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.cover,
+                  )
                   : const Icon(Icons.image, size: 100),
             ],
           ),
@@ -72,8 +90,14 @@ class DetailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(labels[index],
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.grey)),
+                  Text(
+                    labels[index],
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                  ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
@@ -94,7 +118,7 @@ class DetailPage extends StatelessWidget {
                           const SizedBox(height: 4),
                           Text('${(values2[index] * 100).toStringAsFixed(0)}%'),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ],
@@ -112,17 +136,29 @@ class DetailPage extends StatelessWidget {
 
     return Row(
       children: [
-        Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(width: 8),
         Expanded(
           child: Stack(
             children: [
-              Container(height: 20, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10))),
+              Container(
+                height: 20,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
               FractionallySizedBox(
                 widthFactor: clamped,
                 child: Container(
                   height: 20,
-                  decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
+                  decoration: BoxDecoration(
+                    color: color,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
             ],

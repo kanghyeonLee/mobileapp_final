@@ -63,8 +63,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '592180494255',
     projectId: 'mobileappfinal-e4608',
     storageBucket: 'mobileappfinal-e4608.firebasestorage.app',
-    androidClientId: '592180494255-6v68dn6qmhmhthcq71dlhip1ijnnm91o.apps.googleusercontent.com',
-    iosClientId: '592180494255-3m141ejsjt80qqemf55385fm51gs7kgc.apps.googleusercontent.com',
+    androidClientId:
+        '592180494255-6v68dn6qmhmhthcq71dlhip1ijnnm91o.apps.googleusercontent.com',
+    iosClientId:
+        '592180494255-3m141ejsjt80qqemf55385fm51gs7kgc.apps.googleusercontent.com',
     iosBundleId: 'com.example.mobileappFinal',
   );
 
@@ -74,8 +76,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '592180494255',
     projectId: 'mobileappfinal-e4608',
     storageBucket: 'mobileappfinal-e4608.firebasestorage.app',
-    androidClientId: '592180494255-6v68dn6qmhmhthcq71dlhip1ijnnm91o.apps.googleusercontent.com',
-    iosClientId: '592180494255-3m141ejsjt80qqemf55385fm51gs7kgc.apps.googleusercontent.com',
+    androidClientId:
+        '592180494255-6v68dn6qmhmhthcq71dlhip1ijnnm91o.apps.googleusercontent.com',
+    iosClientId:
+        '592180494255-3m141ejsjt80qqemf55385fm51gs7kgc.apps.googleusercontent.com',
     iosBundleId: 'com.example.mobileappFinal',
   );
 
@@ -87,5 +91,4 @@ class DefaultFirebaseOptions {
     authDomain: 'mobileappfinal-e4608.firebaseapp.com',
     storageBucket: 'mobileappfinal-e4608.firebasestorage.app',
   );
-
 }
