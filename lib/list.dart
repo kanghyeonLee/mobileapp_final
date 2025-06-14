@@ -240,7 +240,7 @@ class ListPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30),
                           ),
                         ),
-                        child: const Text('Go to image.dart'),
+                        child: const Text('비교하러 가기!'),
                       ),
                     ),
                   ),
