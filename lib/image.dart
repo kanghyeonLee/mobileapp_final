@@ -244,7 +244,7 @@ class _ImagePageState extends State<ImagePage> {
                       );
                     }
                     : null,
-            child: const Text("Compare"),
+            child: const Text("비교하기"),
           ),
         ],
       ),
