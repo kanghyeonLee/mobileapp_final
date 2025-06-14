@@ -85,10 +85,9 @@ class ProfilePage extends StatelessWidget {
     String? profileImage;
 
     if (user != null) {
-      final providerId =
-          user.providerData.isNotEmpty
-              ? user.providerData[0].providerId
-              : (isAnonymous ? 'anonymous' : 'unknown');
+      final providerId = user.providerData.isNotEmpty
+          ? user.providerData[0].providerId
+          : (isAnonymous ? 'anonymous' : 'unknown');
 
       switch (providerId) {
         case 'google.com':
@@ -113,15 +112,15 @@ class ProfilePage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Sync Your Snap')),
+      appBar: AppBar(
+        title: const Text('Sync Your Snap'),
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 166, 218, 244),
-              ),
+              decoration: BoxDecoration(color: Color.fromARGB(255, 166, 218, 244)),
               child: Text(
                 'Menu',
                 style: TextStyle(color: Colors.white, fontSize: 24),
@@ -167,11 +166,9 @@ class ProfilePage extends StatelessWidget {
             // 프로필 이미지
             CircleAvatar(
               radius: 50,
-              backgroundImage:
-                  profileImage != null
-                      ? NetworkImage(profileImage)
-                      : const AssetImage('assets/default_profile.png')
-                          as ImageProvider,
+              backgroundImage: profileImage != null
+                  ? NetworkImage(profileImage)
+                  : const AssetImage('assets/default_profile.png') as ImageProvider,
               backgroundColor: Colors.grey[300],
             ),
 
