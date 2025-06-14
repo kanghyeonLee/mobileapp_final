@@ -29,14 +29,12 @@ class ProfilePage extends StatelessWidget {
     if (shouldLogout == true) {
       logoutAndCleanupIfAnonymous();
       final user = FirebaseAuth.instance.currentUser;
-      // 로그아웃 처리
+
       if (user != null && !user.isAnonymous) {
-        // 구글 로그인 캐시도 함께 삭제
         final googleSignIn = GoogleSignIn();
         await googleSignIn.signOut();
       }
 
-      // Firebase 로그아웃
       await FirebaseAuth.instance.signOut();
 
       if (context.mounted) {
@@ -51,7 +49,6 @@ class ProfilePage extends StatelessWidget {
     if (user != null && user.isAnonymous) {
       final uid = user.uid;
 
-      // 1. comparison_results 컬렉션에서 uid 일치하는 문서 삭제
       final compDocs =
           await FirebaseFirestore.instance
               .collection('comparison_results')
@@ -62,7 +59,6 @@ class ProfilePage extends StatelessWidget {
         await doc.reference.delete();
       }
 
-      // 2. users 컬렉션에서 uid 일치하는 문서 삭제
       final userDocs =
           await FirebaseFirestore.instance
               .collection('users')
@@ -164,7 +160,6 @@ class ProfilePage extends StatelessWidget {
           children: [
             const SizedBox(height: 30),
 
-            // 프로필 이미지
             CircleAvatar(
               radius: 50,
               backgroundImage:
@@ -177,7 +172,6 @@ class ProfilePage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // 이름
             Text(
               displayName,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -185,7 +179,6 @@ class ProfilePage extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            // 로그인 방식
             Text(
               loginMethod,
               style: TextStyle(color: Colors.grey[700], fontSize: 16),
@@ -193,7 +186,6 @@ class ProfilePage extends StatelessWidget {
 
             const Spacer(),
 
-            // 로그아웃 버튼
             SafeArea(
               minimum: const EdgeInsets.only(bottom: 24),
               child: SizedBox(

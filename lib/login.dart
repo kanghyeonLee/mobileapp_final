@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
       credential,
     );
     if (userCredential.user != null) {
-      await saveUserInfo(userCredential.user!); // 추가
+      await saveUserInfo(userCredential.user!);
       Navigator.pushReplacementNamed(context, '/home');
     }
 
@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<UserCredential> signInAnonymous() async {
     final userCredential = await FirebaseAuth.instance.signInAnonymously();
-    await saveUserInfo(userCredential.user!); // 추가
+    await saveUserInfo(userCredential.user!);
     Navigator.pushReplacementNamed(context, '/home');
     return userCredential;
   }
@@ -50,7 +50,6 @@ class _LoginPageState extends State<LoginPage> {
       'lastLogin': FieldValue.serverTimestamp(),
     };
 
-    // Google 사용자라면 이메일과 이름도 저장
     if (!user.isAnonymous) {
       if (user.email != null) {
         userData['email'] = user.email!;
@@ -93,7 +92,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 60),
 
-              // Email Field
               TextField(
                 controller: emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -128,7 +126,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 16),
 
-              // Password Field
               TextField(
                 controller: passwordController,
                 obscureText: true,
@@ -162,7 +159,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
 
-              // Forgot Password
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -176,7 +172,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
 
-              // Sign in 버튼
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -240,7 +235,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 16),
 
-              // Google 로그인 버튼
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -286,7 +280,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(width: 20),
-                  // Guest 로그인 버튼
+
                   SizedBox(
                     width: 140,
                     height: 50,
@@ -313,7 +307,6 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
 
-              // 회원가입 링크
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

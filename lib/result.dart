@@ -443,10 +443,9 @@ class _ResultPageState extends State<ResultPage> {
                     );
 
                     if (shouldSave == true) {
-                      // 저장 중 로딩창 띄우기
                       showDialog(
                         context: context,
-                        barrierDismissible: false, // 사용자가 백키로 닫지 못하게
+                        barrierDismissible: false,
                         builder:
                             (context) => const AlertDialog(
                               content: Row(
@@ -459,10 +458,8 @@ class _ResultPageState extends State<ResultPage> {
                             ),
                       );
 
-                      // 저장 실행
                       await saveResultToFirestore(image1, image2);
 
-                      // 로딩창 닫기
                       Navigator.pop(context);
 
                       ScaffoldMessenger.of(context).showSnackBar(
