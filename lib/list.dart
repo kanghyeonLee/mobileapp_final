@@ -89,7 +89,7 @@ class ListPage extends StatelessWidget {
                             data = doc.data() as Map<String, dynamic>;
                           } catch (e) {
                             print('doc.data() error: $e');
-                            return const SizedBox(); // error일 경우 아무것도 안 보여줌
+                            return const SizedBox();
                           }
 
                           final title = data['title'] ?? '제목 없음';

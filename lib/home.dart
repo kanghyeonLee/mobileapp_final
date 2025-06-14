@@ -20,11 +20,7 @@ class _HomePageState extends State<HomePage> {
 
   void onComparePressed() {
     final selectedImage = imagePaths[_currentIndex];
-    Navigator.pushNamed(
-      context,
-      '/image',
-      arguments: selectedImage, // 전달
-    );
+    Navigator.pushNamed(context, '/image', arguments: selectedImage);
   }
 
   void onSkipPressed() {

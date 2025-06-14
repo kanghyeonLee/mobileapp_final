@@ -23,11 +23,10 @@ class _CameraCapturePageState extends State<CameraCapturePage> {
   Future<void> _setupCameras() async {
     _cameras = await availableCameras();
 
-    // 전면 카메라 우선 선택
     _selectedCameraIndex = _cameras.indexWhere(
       (cam) => cam.lensDirection == CameraLensDirection.front,
     );
-    if (_selectedCameraIndex == -1) _selectedCameraIndex = 0; // fallback
+    if (_selectedCameraIndex == -1) _selectedCameraIndex = 0;
 
     await _initializeCamera(_selectedCameraIndex);
   }
